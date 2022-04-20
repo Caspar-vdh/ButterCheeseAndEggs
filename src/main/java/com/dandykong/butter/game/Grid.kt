@@ -22,6 +22,10 @@ class Grid {
         playerIds[1] = player2
     }
 
+    fun getCell(row: Int, column: Int): String? {
+        return cells[row][column]
+    }
+
     fun isCellEmpty(row: Int, column: Int): Boolean {
         return cells[row][column] == null
     }
