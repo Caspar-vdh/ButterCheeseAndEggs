@@ -1,4 +1,7 @@
 package com.dandykong.butter.ui
 
-interface GridDrawer {
+import com.dandykong.butter.game.Grid
+
+abstract class GridDrawer(val grid: Grid) {
+    abstract fun draw()
 }

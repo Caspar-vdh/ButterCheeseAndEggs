@@ -8,7 +8,7 @@ const val NR_PLAYERS = 2
 
 class Grid {
     private lateinit var cells: Array<Array<String?>>
-    private val playerIds: Array<String?> = arrayOfNulls(NR_PLAYERS)
+    val playerIds: Array<String?> = arrayOfNulls(NR_PLAYERS)
 
     private fun createEmptyGrid(): Array<Array<String?>> = arrayOf(
             arrayOfNulls(NR_GRID_COLUMNS),
