@@ -16,26 +16,27 @@ class ConsoleDrawer(grid: Grid) : GridDrawer(grid) {
         println()
         for (row in 0 until NR_GRID_ROWS) {
             if (row > 0) {
-                println("-----")
+                println("-----------")
             }
             println(lineForRow(row))
         }
     }
 
-    private fun lineForRow(row: Int) {
+    private fun lineForRow(row: Int): String {
         var line = ""
         for (i in 0 until NR_GRID_COLUMNS) {
             if (i > 0) {
-                line += '|'
+                line += " |"
             }
             line += when (val cell = grid.getCell(row, i)) {
-                null -> ' '
-                grid.playerIds[0] -> playerIcons[0]
-                grid.playerIds[1] -> playerIcons[1]
+                null -> "  "
+                grid.playerIds[0] -> " ${playerIcons[0]}"
+                grid.playerIds[1] -> " ${playerIcons[1]}"
                 else -> {
                     throw ButterException("Unexpected value for cell [$row, $i]: $cell")
                 }
             }
         }
+        return line
     }
 }
