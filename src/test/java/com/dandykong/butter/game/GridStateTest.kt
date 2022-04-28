@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import kotlin.random.Random
 
-@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 internal class GridStateTest {
 
     @Test

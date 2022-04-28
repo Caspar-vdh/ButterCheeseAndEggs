@@ -38,7 +38,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>18</jvmTarget>
+                    <args>
+                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
+                    </args>
                 </configuration>
             </plugin>
         </plugins>

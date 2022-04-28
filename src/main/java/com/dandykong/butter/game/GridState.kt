@@ -2,29 +2,31 @@ package com.dandykong.butter.game
 
 const val INITIAL_WEIGHT: UByte = 127u
 
-class GridState {
-    private val cells: ByteArray;
-    val weights: UByteArray = UByteArray(9) { 0u };
+@OptIn(ExperimentalUnsignedTypes::class)
+class GridState private constructor(val cells: Array<Array<CellState>>) {
 
-    private constructor(cells: ByteArray) {
-        this.cells = cells
-        for (i in 0 until 9) {
-            if (cells[i] == CellState.EMPTY.state) {
-                weights[i] = INITIAL_WEIGHT
+    val weights: UByteArray = UByteArray(9) { 0u }
+
+    init {
+        for (row in 0 until NR_GRID_ROWS) {
+            for (column in 0 until NR_GRID_COLUMNS) {
+                if (cells[row][column] == CellState.EMPTY) {
+                    weights[rowAndColumToActionId(row, column)] = INITIAL_WEIGHT
+                }
             }
         }
     }
 
     companion object {
         fun fromGrid(grid: Grid, playerId: String): GridState {
-            val cells = ByteArray(9) { CellState.EMPTY.state }
+            val cells:Array<Array<CellState>> = Array(NR_GRID_ROWS) { Array(NR_GRID_COLUMNS) { CellState.EMPTY } } // = ByteArray(9) { CellState.EMPTY.state }
             for (row in 0 until NR_GRID_ROWS) {
                 for (column in 0 until NR_GRID_COLUMNS) {
                     if (!grid.isCellEmpty(row, column)) {
                         if (grid.getCell(row, column).equals(playerId)) {
-                            cells[rowAndColumToActionId(row, column)] = CellState.MINE.state
+                            cells[row][column] = CellState.MINE
                         } else {
-                            cells[rowAndColumToActionId(row, column)] = CellState.THEIRS.state
+                            cells[row][column] = CellState.THEIRS
                         }
                     }
                 }
