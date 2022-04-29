@@ -1,6 +1,7 @@
 package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
+import com.dandykong.butter.game.action.SelectChanceByWeightStrategy
 import com.dandykong.butter.game.action.SelectFirstNonZeroStrategy
 import com.dandykong.butter.ui.ConsoleDrawer
 
@@ -26,6 +27,7 @@ class Game(private val players: Array<Player>, private val grid: Grid) {
                         terminate = true
                         break
                     }
+                    readln()
                 }
             } catch (ex: ButterException) {
                 terminate = true
@@ -36,8 +38,8 @@ class Game(private val players: Array<Player>, private val grid: Grid) {
 
 fun main() {
     val players = arrayOf(
-        Player("PLAYER 1", SelectFirstNonZeroStrategy()),
-        Player("PLAYER 2", SelectFirstNonZeroStrategy()),
+        Player("PLAYER 1", SelectChanceByWeightStrategy()),
+        Player("PLAYER 2", SelectChanceByWeightStrategy()),
     )
 
     val grid = Grid()
