@@ -16,10 +16,11 @@ class ConsoleDrawer(grid: Grid) : GridDrawer(grid) {
         println()
         for (row in 0 until NR_GRID_ROWS) {
             if (row > 0) {
-                println("-----------")
+                println("---+---+---")
             }
             println(lineForRow(row))
         }
+        println()
     }
 
     private fun lineForRow(row: Int): String {
