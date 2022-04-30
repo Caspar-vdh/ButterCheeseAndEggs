@@ -40,8 +40,12 @@ internal class GridStateTest {
         val player2 = "PLAYER_2"
         val row1 = Random.nextInt(NR_GRID_ROWS)
         val column1 = Random.nextInt(NR_GRID_COLUMNS)
-        val row2 = Random.nextInt(NR_GRID_ROWS)
-        val column2 = Random.nextInt(NR_GRID_COLUMNS)
+        var row2 = Random.nextInt(NR_GRID_ROWS)
+        var column2 = Random.nextInt(NR_GRID_COLUMNS)
+        while (row1 == row2 && column1 == column2) {
+            row2 = Random.nextInt(NR_GRID_ROWS)
+            column2 = Random.nextInt(NR_GRID_COLUMNS)
+        }
 
         grid.startGame(player1, player2)
         grid.setCell(row1, column1, player1)
@@ -55,5 +59,31 @@ internal class GridStateTest {
                 else -> assertEquals(INITIAL_WEIGHT, weights[i])
             }
         }
+    }
+
+    @Test
+    fun testGenerateId() {
+        val grid = Grid()
+        val player1 = "PLAYER_1"
+        val player2 = "PLAYER_2"
+        val row1 = Random.nextInt(NR_GRID_ROWS)
+        val column1 = Random.nextInt(NR_GRID_COLUMNS)
+        var row2 = Random.nextInt(NR_GRID_ROWS)
+        var column2 = Random.nextInt(NR_GRID_COLUMNS)
+        while (row1 == row2 && column1 == column2) {
+            row2 = Random.nextInt(NR_GRID_ROWS)
+            column2 = Random.nextInt(NR_GRID_COLUMNS)
+        }
+
+        grid.startGame(player1, player2)
+        grid.setCell(row1, column1, player1)
+        grid.setCell(row2, column2, player2)
+
+        val gridStateId = GridState.fromGrid(grid, player1).generateId()
+
+        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1) * 2)) and 0x03
+        assertEquals(cellState1, CellState.MINE.state)
+        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2) * 2)) and 0x03
+        assertEquals(cellState2, CellState.THEIRS.state)
     }
 }

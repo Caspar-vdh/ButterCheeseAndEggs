@@ -3,6 +3,7 @@ package com.dandykong.butter.game.action
 import com.dandykong.butter.exception.ButterException
 import kotlin.random.Random
 
+@Suppress("OPT_IN_USAGE", "OPT_IN_OVERRIDE")
 class SelectChanceByWeightStrategy: ActionSelectionStrategy {
     override fun selectAction(weights: UByteArray): Int {
         val weightIndices:MutableList<Pair<UByte, Int>> = mutableListOf()
@@ -19,7 +20,7 @@ class SelectChanceByWeightStrategy: ActionSelectionStrategy {
         }
         weightIndices.sortByDescending { it.first }
         val rand = Random.nextInt(weightIndices.sumOf { it.first.toInt() })
-        var sum = 0;
+        var sum = 0
         for (weightIndex in weightIndices) {
             sum += weightIndex.first.toInt()
             if (rand < sum) return weightIndex.second

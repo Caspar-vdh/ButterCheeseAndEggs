@@ -1,11 +1,12 @@
 package com.dandykong.butter.game
 
 const val INITIAL_WEIGHT: UByte = 127u
+const val MAX_NR_ACTIONS = NR_GRID_ROWS * NR_GRID_COLUMNS
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class GridState private constructor(val cells: Array<Array<CellState>>) {
 
-    val weights: UByteArray = UByteArray(9) { 0u }
+    val weights: UByteArray = UByteArray(MAX_NR_ACTIONS) { 0u }
 
     init {
         for (row in 0 until NR_GRID_ROWS) {
@@ -15,6 +16,16 @@ class GridState private constructor(val cells: Array<Array<CellState>>) {
                 }
             }
         }
+    }
+
+    fun generateId(): Int {
+        var id = 0
+        for(i in 0 until MAX_NR_ACTIONS) {
+            val (row, column) = actionIdToRowAndColumn(i)
+            val cellState = cells[row][column].state
+            id = id or (cellState shl (i * 2))
+        }
+        return id
     }
 
     companion object {
@@ -33,7 +44,6 @@ class GridState private constructor(val cells: Array<Array<CellState>>) {
             }
             return GridState(cells)
         }
-
     }
 }
 
