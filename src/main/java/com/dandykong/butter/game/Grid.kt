@@ -1,7 +1,6 @@
 package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
-import java.lang.Math.abs
 
 const val NR_GRID_COLUMNS = 3
 const val NR_GRID_ROWS = 3
