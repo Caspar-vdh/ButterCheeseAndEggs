@@ -1,12 +1,15 @@
 package com.dandykong.butter.game
 
+import com.dandykong.training.basics.State
+
 const val INITIAL_WEIGHT: UByte = 127u
 const val MAX_NR_ACTIONS = NR_GRID_ROWS * NR_GRID_COLUMNS
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class GridState private constructor(val cells: Array<Array<CellState>>) {
+class GridState private constructor(val cells: Array<Array<CellState>>): State {
 
     val weights: UByteArray = UByteArray(MAX_NR_ACTIONS) { 0u }
+    override val id: Int
 
     init {
         for (row in 0 until NR_GRID_ROWS) {
@@ -16,6 +19,7 @@ class GridState private constructor(val cells: Array<Array<CellState>>) {
                 }
             }
         }
+        id = generateId()
     }
 
     fun generateId(): Int {
@@ -25,6 +29,19 @@ class GridState private constructor(val cells: Array<Array<CellState>>) {
             val cellState = cells[row][column].state
             id = id or (cellState shl (i * 2))
         }
+        return id
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as GridState
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
         return id
     }
 
@@ -45,6 +62,8 @@ class GridState private constructor(val cells: Array<Array<CellState>>) {
             return GridState(cells)
         }
     }
+
+
 }
 
 fun rowAndColumToActionId(row: Int, column: Int): Int {
