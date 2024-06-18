@@ -50,7 +50,7 @@
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
-        <kotlin.version>1.6.20</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <junit.version>5.8.2</junit.version>
     </properties>
 

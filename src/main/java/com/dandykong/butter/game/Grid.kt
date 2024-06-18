@@ -85,3 +85,4 @@ class Grid {
                 || (row == 1 && column == 1)
     }
 }
+

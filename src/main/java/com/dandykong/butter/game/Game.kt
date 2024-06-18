@@ -2,7 +2,6 @@ package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.action.SelectChanceByWeightStrategy
-import com.dandykong.butter.game.action.SelectFirstNonZeroStrategy
 import com.dandykong.butter.ui.ConsoleDrawer
 
 class Game(private val players: Array<Player>, private val grid: Grid) {
@@ -13,7 +12,8 @@ class Game(private val players: Array<Player>, private val grid: Grid) {
         while (!terminate) {
             try {
                 for (player in players) {
-                    val nextAction = player.nextAction(GridState.fromGrid(grid, player.name))
+                    val id = GridState.generateId(grid, player.name)
+                    val nextAction = player.nextAction(GridState.createNewFromGrid(grid, id))
                     val (row, column) = actionIdToRowAndColumn(nextAction)
                     grid.setCell(row, column, player.name)
                     drawer.draw()

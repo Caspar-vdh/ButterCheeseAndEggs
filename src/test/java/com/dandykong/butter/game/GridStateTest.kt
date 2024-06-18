@@ -1,5 +1,6 @@
 package com.dandykong.butter.game
 
+import com.dandykong.training.basics.INITIAL_WEIGHT
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import kotlin.random.Random
@@ -51,7 +52,9 @@ internal class GridStateTest {
         grid.setCell(row1, column1, player1)
         grid.setCell(row2, column2, player2)
 
-        val weights: UByteArray = GridState.fromGrid(grid, player1).weights
+        val id = 123
+        val gridState = GridState.createNewFromGrid(grid, id)
+        val weights: UByteArray = gridState.weights
         for (i in 0 until 9) {
             when (i) {
                 rowAndColumToActionId(row1, column1) -> assertEquals(0.toUByte(), weights[i])
@@ -59,6 +62,7 @@ internal class GridStateTest {
                 else -> assertEquals(INITIAL_WEIGHT, weights[i])
             }
         }
+        assertEquals(id, gridState.id)
     }
 
     @Test
@@ -79,7 +83,7 @@ internal class GridStateTest {
         grid.setCell(row1, column1, player1)
         grid.setCell(row2, column2, player2)
 
-        val gridStateId = GridState.fromGrid(grid, player1).generateId()
+        val gridStateId = GridState.generateId(grid, player1)
 
         val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1) * 2)) and 0x03
         assertEquals(cellState1, CellState.MINE.state)
