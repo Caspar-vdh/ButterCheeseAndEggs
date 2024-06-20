@@ -3,6 +3,7 @@ package com.dandykong.training.rewardstrategies
 import com.dandykong.training.basics.INITIAL_WEIGHT
 import com.dandykong.training.basics.MAX_WEIGHT
 import com.dandykong.training.basics.State
+import com.dandykong.training.basics.TestState
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -51,8 +52,4 @@ internal class PositiveRewardStrategy1Test {
         assertEquals(MAX_WEIGHT, testState2.weights[3])
         assertEquals(MAX_WEIGHT, testState6.weights[7])
     }
-}
-
-@OptIn(ExperimentalUnsignedTypes::class)
-class TestState(id: Int, weights: UByteArray) : State(id, weights) {
 }
