@@ -4,6 +4,7 @@ package com.dandykong.training.rewardstrategies
 
 import com.dandykong.training.basics.INITIAL_WEIGHT
 import com.dandykong.training.basics.State
+import com.dandykong.training.basics.TestState
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

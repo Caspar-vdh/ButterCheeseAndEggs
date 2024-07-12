@@ -4,25 +4,26 @@ import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.action.SelectChanceByWeightStrategy
 import com.dandykong.butter.ui.ConsoleDrawer
 
-class Game(private val players: Array<Player>, private val grid: Grid) {
+class Game(private val players: Array<Player>) {
     fun play() {
-        grid.startGame(players[0].name, players[1].name)
+        val grid = Grid.createInitial()
         val drawer = ConsoleDrawer(grid)
         var terminate = false
         while (!terminate) {
             try {
                 for (player in players) {
-                    val id = GridState.generateId(grid, player.name)
-                    val nextAction = player.nextAction(GridState.createNewFromGrid(grid, id))
+                    val id = grid.generateId(player.id)
+                    val state = GridState.createNewFromGrid(grid, id)
+                    val nextAction = player.nextAction(state)
                     val (row, column) = actionIdToRowAndColumn(nextAction)
-                    grid.setCell(row, column, player.name)
+                    grid.setCell(row, column, player.id)
                     drawer.draw()
                     if (grid.winningPlayer != null) {
                         println("Game finished, ${grid.winningPlayer} won!")
                         terminate = true
                         break
                     }
-                    if (grid.filledCells == NR_GRID_ROWS * NR_GRID_COLUMNS) {
+                    if (grid.isFull()) {
                         println("Game over, nobody won")
                         terminate = true
                         break
@@ -38,11 +39,9 @@ class Game(private val players: Array<Player>, private val grid: Grid) {
 
 fun main() {
     val players = arrayOf(
-        Player("PLAYER 1", SelectChanceByWeightStrategy()),
-        Player("PLAYER 2", SelectChanceByWeightStrategy()),
+        Player(Grid.PLAYER_1, SelectChanceByWeightStrategy()),
+        Player(Grid.PLAYER_2, SelectChanceByWeightStrategy()),
     )
 
-    val grid = Grid()
-
-    Game(players, grid).play()
+    Game(players).play()
 }

@@ -21,22 +21,6 @@ class GridState(id: Int, weights: UByteArray): State(id, weights) {
             }
             return GridState(id, weights)
         }
-
-        fun generateId(grid: Grid, playerId: String): Int {
-            var id = 0
-            for (row in 0 until NR_GRID_ROWS) {
-                for (column in 0 until NR_GRID_COLUMNS) {
-                    val index = rowAndColumToActionId(row, column)
-                    if (!grid.isCellEmpty(row, column)) {
-                        val cellState =
-                            if (grid.getCell(row, column).equals(playerId)) CellState.MINE
-                            else CellState.THEIRS
-                        id = id or (cellState.state shl (index * 2))
-                    }
-                }
-            }
-            return id
-        }
     }
 }
 

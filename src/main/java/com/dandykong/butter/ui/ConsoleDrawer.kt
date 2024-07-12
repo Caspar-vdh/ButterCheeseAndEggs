@@ -30,9 +30,9 @@ class ConsoleDrawer(grid: Grid) : GridDrawer(grid) {
                 line += " |"
             }
             line += when (val cell = grid.getCell(row, i)) {
-                null -> "  "
-                grid.playerIds[0] -> " ${playerIcons[0]}"
-                grid.playerIds[1] -> " ${playerIcons[1]}"
+                0 -> "  "
+                Grid.PLAYER_1 -> " ${playerIcons[0]}"
+                Grid.PLAYER_2 -> " ${playerIcons[1]}"
                 else -> {
                     throw ButterException("Unexpected value for cell [$row, $i]: $cell")
                 }

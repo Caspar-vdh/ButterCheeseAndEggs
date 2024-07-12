@@ -2,52 +2,68 @@ package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import kotlin.random.Random
-
-private const val PLAYER_1 = "PLAYER 1"
-private const val PLAYER_2 = "PLAYER 2"
 
 internal class GridTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     fun isCellEmpty() {
-        val grid = Grid()
+        val grid = Grid.createInitial()
         val row = Random.nextInt(NR_GRID_COLUMNS)
         val column = Random.nextInt(NR_GRID_ROWS)
 
-        // checking whether a cell is empty should result in an UninitializedPropertyAccessException
-        try {
-            grid.isCellEmpty(row, column)
-            fail<Nothing>("expected exception not thrown")
-        } catch (ignored: UninitializedPropertyAccessException) {
-        }
-
-        grid.startGame(PLAYER_1, PLAYER_2)
         assertTrue(grid.isCellEmpty(row, column))
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     fun setCell() {
-        val grid = Grid()
+        val grid = Grid.createInitial()
         val row = Random.nextInt(NR_GRID_COLUMNS)
         val column = Random.nextInt(NR_GRID_ROWS)
 
-        grid.startGame(PLAYER_1, PLAYER_2)
-
         // Setting a cell with an unknown player results in an exception
         try {
-            grid.setCell(row, column, "PLAYER 3")
+            grid.setCell(row, column, 3)
             fail<Nothing>("Expected exception not thrown")
         } catch (ignored: ButterException) {
         }
 
-        grid.setCell(row, column, PLAYER_1)
+        grid.setCell(row, column, Grid.PLAYER_1)
 
         // Setting the same cell for a second time results in an exception
         try {
-            grid.setCell(row, column, PLAYER_2)
+            grid.setCell(row, column, Grid.PLAYER_2)
             fail<Nothing>("Expected exception not thrown")
         } catch (ignored: ButterException) {
         }
+    }
+
+    @Test
+    fun testGenerateId() {
+        val grid = Grid.createInitial()
+        val player1 = Grid.PLAYER_1
+        val player2 = Grid.PLAYER_2
+        val row1 = Random.nextInt(NR_GRID_ROWS)
+        val column1 = Random.nextInt(NR_GRID_COLUMNS)
+        var row2 = Random.nextInt(NR_GRID_ROWS)
+        var column2 = Random.nextInt(NR_GRID_COLUMNS)
+        while (row1 == row2 && column1 == column2) {
+            row2 = Random.nextInt(NR_GRID_ROWS)
+            column2 = Random.nextInt(NR_GRID_COLUMNS)
+        }
+
+        grid.setCell(row1, column1, player1)
+        grid.setCell(row2, column2, player2)
+
+        val gridStateId = grid.generateId(player1)
+
+        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1) * 2)) and 0x03
+        assertEquals(cellState1, CellState.MINE.state)
+        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2) * 2)) and 0x03
+        assertEquals(cellState2, CellState.THEIRS.state)
+
+        val generatedGrid = Grid.createFromId(gridStateId, player1, player2)
+        assertEquals(grid, generatedGrid)
     }
 }
