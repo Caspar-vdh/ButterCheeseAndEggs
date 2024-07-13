@@ -1,19 +1,31 @@
 package com.dandykong.training.basics
 
+import java.io.DataOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.exists
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class StateStore<S>(private val filePath: String) where S : State {
+class StateStore<S>(
+    private val filePath: String,
+    private val nrActionsForState: Int,
+    private val factory: StateFactory<S>
+) where S : State {
     private val store: MutableMap<Int, S>
 
     init {
-        store = getNewOrPersistedStore(filePath)
+        store = getNewOrPersistedStore()
     }
 
     fun getStateForId(id: Int): S? {
         return store[id]
+    }
+
+    fun hasStateForId(id: Int): Boolean {
+        return store.containsKey(id)
     }
 
     fun addState(state: S) {
@@ -21,19 +33,40 @@ class StateStore<S>(private val filePath: String) where S : State {
     }
 
     fun persistStore() {
+        val stream = DataOutputStream(FileOutputStream(filePath))
+        store.values.forEach{
+            stream.writeInt(it.id)
+            for (i in 0 until nrActionsForState) {
+                stream.writeByte(it.weights[i].toInt())
+            }
+        }
+
         val file = FileOutputStream(filePath)
         store.values.forEach{
             file.write(it.id)
             file.write(it.weights.toByteArray())
+            file.flush()
         }
         file.flush()
         file.close()
     }
 
-    private fun getNewOrPersistedStore(filePath: String): MutableMap<Int, S> {
-//        val file = FileInputStream(filePath)
-//        file.read()
-        return hashMapOf()
+    private fun getNewOrPersistedStore(): MutableMap<Int, S> {
+        val tempStore = hashMapOf<Int, S>()
+        if (Path(filePath).exists()) {
+            val file = FileInputStream(filePath)
+            val scanner = Scanner(file)
+            while (scanner.hasNext()) {
+                val id = scanner.nextInt()
+                val weights = UByteArray(nrActionsForState)
+                for (i in 0 until nrActionsForState) {
+                    weights[0] = scanner.nextByte().toUByte()
+                }
+                val state = factory.createNew(id, weights)
+                tempStore[state.id] = state
+            }
+        }
+        return tempStore
     }
 
 }

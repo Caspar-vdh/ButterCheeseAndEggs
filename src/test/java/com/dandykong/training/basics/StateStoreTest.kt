@@ -14,11 +14,15 @@ internal class StateStoreTest {
         assertEquals(unsignedArray[0], signedArray.toUByteArray()[0])
         assertEquals(unsignedArray[1], signedArray.toUByteArray()[1])
         assertEquals(unsignedArray[2], signedArray.toUByteArray()[2])
+
+        val unsignedByte: UByte = 133u
+        val asInt = unsignedByte.toInt()
+        assertEquals(unsignedByte, asInt.toUByte())
     }
 
     @Test
     fun addStateToStore() {
-        val stateStore = StateStore<TestState>("/path/to/file")
+        val stateStore = StateStore<TestState>("/path/to/file", 3, TestStateFactory())
 
         val testState = TestState(123, ubyteArrayOf())
         assertNull(stateStore.getStateForId(testState.id))
