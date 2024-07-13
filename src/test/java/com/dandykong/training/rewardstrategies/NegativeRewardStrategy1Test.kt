@@ -3,6 +3,7 @@
 package com.dandykong.training.rewardstrategies
 
 import com.dandykong.training.basics.INITIAL_WEIGHT
+import com.dandykong.training.basics.MIN_WEIGHT
 import com.dandykong.training.basics.State
 import com.dandykong.training.basics.TestState
 import org.junit.jupiter.api.Assertions.*
@@ -38,7 +39,7 @@ internal class NegativeRewardStrategy1Test {
         val testState2 = TestState(2, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
         testState2.weights[3] = 2u
         val testState6 = TestState(6, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
-        testState6.weights[7] = 0u
+        testState6.weights[7] = 1u
 
         val selectedWeights = mutableMapOf<State, Int>(
             Pair(testState2, 3),
@@ -47,7 +48,7 @@ internal class NegativeRewardStrategy1Test {
 
         NegativeRewardStrategy1().updateWeights(selectedWeights)
 
-        val expectedWeight: UByte = 0u
+        val expectedWeight: UByte = MIN_WEIGHT
         assertEquals(expectedWeight, testState2.weights[3])
         assertEquals(expectedWeight, testState6.weights[7])
     }

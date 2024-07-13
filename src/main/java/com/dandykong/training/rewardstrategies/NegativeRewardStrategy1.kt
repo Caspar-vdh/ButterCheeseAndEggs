@@ -1,5 +1,6 @@
 package com.dandykong.training.rewardstrategies
 
+import com.dandykong.training.basics.MIN_WEIGHT
 import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.State
 import kotlin.math.max
@@ -21,7 +22,7 @@ class NegativeRewardStrategy1: RewardStrategy<State> {
 
             val weight = state.weights[action].toInt()
             // TODO: error handling in case there are no weights for state?
-            val newWeight = max(weight - negativeRewardValue, 0)
+            val newWeight = max(weight - negativeRewardValue, MIN_WEIGHT.toInt())
             state.weights[action] = newWeight.toUByte()
             negativeRewardValue--
         }
