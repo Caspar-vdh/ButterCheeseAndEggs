@@ -1,5 +1,6 @@
 package com.dandykong.training.basics
 
+import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -40,31 +41,23 @@ class StateStore<S>(
                 stream.writeByte(it.weights[i].toInt())
             }
         }
-
-        val file = FileOutputStream(filePath)
-        store.values.forEach{
-            file.write(it.id)
-            file.write(it.weights.toByteArray())
-            file.flush()
-        }
-        file.flush()
-        file.close()
+        stream.close()
     }
 
     private fun getNewOrPersistedStore(): MutableMap<Int, S> {
         val tempStore = hashMapOf<Int, S>()
         if (Path(filePath).exists()) {
-            val file = FileInputStream(filePath)
-            val scanner = Scanner(file)
-            while (scanner.hasNext()) {
-                val id = scanner.nextInt()
+            val stream = DataInputStream(FileInputStream(filePath))
+            while (stream.available() > 0) {
+                val id = stream.readInt()
                 val weights = UByteArray(nrActionsForState)
                 for (i in 0 until nrActionsForState) {
-                    weights[0] = scanner.nextByte().toUByte()
+                    weights[i] = stream.readByte().toUByte()
                 }
                 val state = factory.createNew(id, weights)
                 tempStore[state.id] = state
             }
+            stream.close()
         }
         return tempStore
     }

@@ -8,6 +8,7 @@ import com.dandykong.training.basics.StateStore
 
 class Game(private val players: Array<Player>) {
     fun play() {
+
         val stateStore = StateStore<GridState>(
             "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat",
             NR_GRID_ROWS * NR_GRID_COLUMNS,
