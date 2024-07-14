@@ -1,6 +1,6 @@
 package com.dandykong.training.basics
 
-interface RewardStrategy<State> {
+interface RewardStrategy<S> where S : State {
 
     /**
      * Updates the weights for all states in a game.
@@ -11,5 +11,5 @@ interface RewardStrategy<State> {
      * @param weightsMap
      *
      */
-    fun updateWeights(selectedActions: Map<State, Int>)
+    fun updateWeights(selectedActions: Map<S, Int>)
 }

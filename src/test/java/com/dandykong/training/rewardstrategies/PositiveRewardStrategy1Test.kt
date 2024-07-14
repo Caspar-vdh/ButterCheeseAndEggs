@@ -2,7 +2,6 @@ package com.dandykong.training.rewardstrategies
 
 import com.dandykong.training.basics.INITIAL_WEIGHT
 import com.dandykong.training.basics.MAX_WEIGHT
-import com.dandykong.training.basics.State
 import com.dandykong.training.basics.TestState
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -18,7 +17,7 @@ internal class PositiveRewardStrategy1Test {
         val testState4 = TestState(4, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
         val testState6 = TestState(6, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
         val testState9 = TestState(9, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
-        val selectedWeights = mutableMapOf<State, Int>(
+        val selectedWeights = mutableMapOf(
             Pair(testState1, 1),
             Pair(testState2, 3),
             Pair(testState4, 5),
@@ -26,7 +25,7 @@ internal class PositiveRewardStrategy1Test {
             Pair(testState9, 8)
         )
 
-        PositiveRewardStrategy1().updateWeights(selectedWeights)
+        PositiveRewardStrategy1<TestState>().updateWeights(selectedWeights)
 
         assertEquals((INITIAL_WEIGHT + 1u).toUByte(), testState1.weights[1])
         assertEquals((INITIAL_WEIGHT + 2u).toUByte(), testState2.weights[3])
@@ -42,12 +41,12 @@ internal class PositiveRewardStrategy1Test {
         val testState6 = TestState(6, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT })
         testState6.weights[7] = MAX_WEIGHT
 
-        val selectedWeights = mutableMapOf<State, Int>(
+        val selectedWeights = mutableMapOf(
             Pair(testState2, 3),
             Pair(testState6, 7),
         )
 
-        PositiveRewardStrategy1().updateWeights(selectedWeights)
+        PositiveRewardStrategy1<TestState>().updateWeights(selectedWeights)
 
         assertEquals(MAX_WEIGHT, testState2.weights[3])
         assertEquals(MAX_WEIGHT, testState6.weights[7])

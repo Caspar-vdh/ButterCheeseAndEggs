@@ -5,15 +5,14 @@ import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.State
 import kotlin.math.min
 
-class PositiveRewardStrategy1: RewardStrategy<State> {
-
+class PositiveRewardStrategy1<S : State>: RewardStrategy<S>   {
     /**
      * Final state gets increased with 5 (or set to the max value, 255)
      * Second last state (given there are two or more entries) with 4
      * etc... up to fifth last state (given there are 5 states) with 1
      */
     @OptIn(ExperimentalUnsignedTypes::class)
-    override fun updateWeights(selectedActions: Map<State, Int>) {
+    override fun updateWeights(selectedActions: Map<S, Int>) {
         var rewardValue = 5
 
         for (entry in selectedActions.entries.reversed().iterator()) {
