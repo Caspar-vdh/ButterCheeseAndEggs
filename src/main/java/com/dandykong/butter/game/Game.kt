@@ -1,5 +1,6 @@
 package com.dandykong.butter.game
 
+import ch.qos.logback.classic.Logger
 import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.action.SelectChanceByWeightStrategy
 import com.dandykong.butter.game.grid.GridStateFactory
@@ -8,6 +9,7 @@ import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.StateStore
 import com.dandykong.training.rewardstrategies.NegativeRewardStrategy1
 import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
+import org.slf4j.LoggerFactory
 
 class Game(
     private val players: Array<Player<GridState>>,
@@ -15,6 +17,9 @@ class Game(
     private val negativeRewardStrategy: RewardStrategy<GridState>
 ) {
     fun play() {
+
+        val logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
+        logger.info("Testing testing 123")
 
         val stateStore = StateStore(
             "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat",
