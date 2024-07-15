@@ -1,18 +1,14 @@
 package com.dandykong.butter.game
 
-import ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME
 import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.action.SelectChanceByWeightStrategy
 import com.dandykong.butter.game.grid.GridStateFactory
-import com.dandykong.butter.ui.ConsoleDrawer
 import com.dandykong.butter.ui.GridDrawer
 import com.dandykong.logger.LOG
 import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.StateStore
 import com.dandykong.training.rewardstrategies.NegativeRewardStrategy1
 import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 const val NR_OF_GAMES = 100000
 const val NR_OF_GAMES_FOR_STORE = 200
