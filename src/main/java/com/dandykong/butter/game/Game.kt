@@ -14,8 +14,8 @@ import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-const val NR_OF_GAMES = 100
-const val NR_OF_GAMES_FOR_STORE = 5
+const val NR_OF_GAMES = 100000
+const val NR_OF_GAMES_FOR_STORE = 200
 
 class Game(
     private val players: Array<Player<GridState>>,
