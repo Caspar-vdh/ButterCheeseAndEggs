@@ -5,25 +5,29 @@ import com.dandykong.butter.game.Grid
 import com.dandykong.butter.game.NR_GRID_COLUMNS
 import com.dandykong.butter.game.NR_GRID_ROWS
 
-class ConsoleDrawer(grid: Grid) : GridDrawer(grid) {
+class ConsoleDrawer() : GridDrawer() {
     private val playerIcons = CharArray(2) { index -> when (index) {
         0 -> 'o'
         1 -> 'x'
         else -> throw ButterException("Unexpected index in playerIcons array: $index")
     } }
 
-    override fun draw() {
+    override fun draw(grid: Grid) {
         println()
         for (row in 0 until NR_GRID_ROWS) {
             if (row > 0) {
                 println("---+---+---")
             }
-            println(lineForRow(row))
+            println(lineForRow(row, grid))
         }
         println()
     }
 
-    private fun lineForRow(row: Int): String {
+    override fun waitForUser() {
+        readln()
+    }
+
+    private fun lineForRow(row: Int, grid: Grid): String {
         var line = ""
         for (i in 0 until NR_GRID_COLUMNS) {
             if (i > 0) {

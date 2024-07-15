@@ -1,5 +1,6 @@
 package com.dandykong.training.basics
 
+import com.dandykong.logger.LOG
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
@@ -39,6 +40,7 @@ class StateStore<S>(
                 stream.writeByte(it.weights[i].toInt())
             }
         }
+        LOG.info("Persisted store, wrote ${store.size} states")
         stream.close()
     }
 
@@ -56,6 +58,7 @@ class StateStore<S>(
                 tempStore[state.id] = state
             }
             stream.close()
+            LOG.info("Read store, ${tempStore.size} states")
         }
         return tempStore
     }
