@@ -1,4 +1,4 @@
-package com.dandykong.butter.game.action
+package com.dandykong.training.actionselectionstrategies
 
 import com.dandykong.butter.exception.ButterException
 import kotlin.random.Random

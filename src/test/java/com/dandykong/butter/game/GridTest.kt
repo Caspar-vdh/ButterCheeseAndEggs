@@ -1,6 +1,10 @@
 package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
+import com.dandykong.butter.game.grid.Grid
+import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.game.grid.NR_GRID_ROWS
+import com.dandykong.training.player.Player
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
@@ -29,11 +33,11 @@ internal class GridTest {
         } catch (ignored: ButterException) {
         }
 
-        grid.setCell(row, column, Grid.PLAYER_1)
+        grid.setCell(row, column, Player.PLAYER_1)
 
         // Setting the same cell for a second time results in an exception
         try {
-            grid.setCell(row, column, Grid.PLAYER_2)
+            grid.setCell(row, column, Player.PLAYER_2)
             fail<Nothing>("Expected exception not thrown")
         } catch (ignored: ButterException) {
         }
@@ -42,8 +46,8 @@ internal class GridTest {
     @Test
     fun testGenerateId() {
         val grid = Grid.createInitial()
-        val player1 = Grid.PLAYER_1
-        val player2 = Grid.PLAYER_2
+        val player1 = Player.PLAYER_1
+        val player2 = Player.PLAYER_2
         val row1 = Random.nextInt(NR_GRID_ROWS)
         val column1 = Random.nextInt(NR_GRID_COLUMNS)
         var row2 = Random.nextInt(NR_GRID_ROWS)

@@ -1,11 +1,10 @@
 package com.dandykong.training.rewardstrategies
 
 import com.dandykong.training.basics.MAX_WEIGHT
-import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.State
 import kotlin.math.min
 
-class PositiveRewardStrategy1<S : State>: RewardStrategy<S>   {
+class PositiveRewardStrategy1<S : State>: RewardStrategy<S> {
     /**
      * Final state gets increased with 5 (or set to the max value, 255)
      * Second last state (given there are two or more entries) with 4

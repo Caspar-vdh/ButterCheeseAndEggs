@@ -1,9 +1,10 @@
 package com.dandykong.butter.ui
 
 import com.dandykong.butter.exception.ButterException
-import com.dandykong.butter.game.Grid
-import com.dandykong.butter.game.NR_GRID_COLUMNS
-import com.dandykong.butter.game.NR_GRID_ROWS
+import com.dandykong.butter.game.grid.Grid
+import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.game.grid.NR_GRID_ROWS
+import com.dandykong.training.player.Player
 
 class ConsoleDrawer() : GridDrawer() {
     private val playerIcons = CharArray(2) { index -> when (index) {
@@ -35,8 +36,8 @@ class ConsoleDrawer() : GridDrawer() {
             }
             line += when (val cell = grid.getCell(row, i)) {
                 0 -> "  "
-                Grid.PLAYER_1 -> " ${playerIcons[0]}"
-                Grid.PLAYER_2 -> " ${playerIcons[1]}"
+                Player.PLAYER_1 -> " ${playerIcons[0]}"
+                Player.PLAYER_2 -> " ${playerIcons[1]}"
                 else -> {
                     throw ButterException("Unexpected value for cell [$row, $i]: $cell")
                 }

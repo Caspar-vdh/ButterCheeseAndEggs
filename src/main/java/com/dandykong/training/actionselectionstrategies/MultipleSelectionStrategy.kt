@@ -1,12 +1,24 @@
 package com.dandykong.training.actionselectionstrategies
 
-import com.dandykong.training.basics.ActionSelectionStrategy
+import kotlin.random.Random
 
-class DualSelectionStrategy(val strategies: List<Pair<ActionSelectionStrategy, Int>>): ActionSelectionStrategy {
+class MultipleSelectionStrategy(private vararg val strategies: Pair<ActionSelectionStrategy, Int>):
+    ActionSelectionStrategy {
 
-    val totalChance = strategies.stream().map { pair -> pair.second }.
+    private val totalChance = strategies.sumOf { pair -> pair.second }
 
+    @ExperimentalUnsignedTypes
     override fun selectAction(weights: UByteArray): Int {
-        return 3;
+        val chance = Random.nextInt(totalChance);
+        var sum = 0
+
+        for (strategy in strategies){
+            sum += strategy.second
+            if (chance < sum) {
+                return strategy.first.selectAction(weights)
+            }
+        }
+        // fallback, shouldn't happen
+        return strategies[0].first.selectAction(weights)
     }
 }

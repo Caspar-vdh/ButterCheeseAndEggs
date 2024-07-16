@@ -1,17 +1,17 @@
-package com.dandykong.butter.game
+package com.dandykong.training.player
 
-import com.dandykong.butter.game.action.ActionSelectionStrategy
+import com.dandykong.training.actionselectionstrategies.ActionSelectionStrategy
 import com.dandykong.training.basics.State
 
-class Player<S : State>(val id: Int, private val strategy: ActionSelectionStrategy) {
+class CPUPlayer<S : State>(override val id: Int, private val strategy: ActionSelectionStrategy): Player<S> {
     val selectedActions: MutableMap<S, Int> = hashMapOf()
 
-    fun resetForNewGame() {
+    override fun resetForNewGame() {
         selectedActions.clear()
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun nextAction(state: S): Int {
+    override fun nextAction(state: S): Int {
         val action = strategy.selectAction(state.weights)
         selectedActions[state] = action
         return action

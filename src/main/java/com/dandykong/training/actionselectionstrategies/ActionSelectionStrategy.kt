@@ -1,4 +1,4 @@
-package com.dandykong.butter.game.action
+package com.dandykong.training.actionselectionstrategies
 
 interface ActionSelectionStrategy {
     @OptIn(ExperimentalUnsignedTypes::class)

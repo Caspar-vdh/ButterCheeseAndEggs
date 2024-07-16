@@ -1,7 +1,6 @@
 package com.dandykong.training.rewardstrategies
 
 import com.dandykong.training.basics.MIN_WEIGHT
-import com.dandykong.training.basics.RewardStrategy
 import com.dandykong.training.basics.State
 import kotlin.math.max
 

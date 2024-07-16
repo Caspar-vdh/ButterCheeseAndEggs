@@ -1,6 +1,10 @@
 package com.dandykong.butter.game
 
+import com.dandykong.butter.game.grid.Grid
+import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.game.grid.NR_GRID_ROWS
 import com.dandykong.training.basics.INITIAL_WEIGHT
+import com.dandykong.training.player.Player
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import kotlin.random.Random
@@ -46,8 +50,8 @@ internal class GridStateTest {
             column2 = Random.nextInt(NR_GRID_COLUMNS)
         }
 
-        grid.setCell(row1, column1, Grid.PLAYER_1)
-        grid.setCell(row2, column2, Grid.PLAYER_2)
+        grid.setCell(row1, column1, Player.PLAYER_1)
+        grid.setCell(row2, column2, Player.PLAYER_2)
 
         val id = 123
         val gridState = GridState.createNewFromGrid(grid, id)

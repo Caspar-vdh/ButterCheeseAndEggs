@@ -1,5 +1,8 @@
 package com.dandykong.butter.game
 
+import com.dandykong.butter.game.grid.Grid
+import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.game.grid.NR_GRID_ROWS
 import com.dandykong.training.basics.INITIAL_WEIGHT
 import com.dandykong.training.basics.State
 

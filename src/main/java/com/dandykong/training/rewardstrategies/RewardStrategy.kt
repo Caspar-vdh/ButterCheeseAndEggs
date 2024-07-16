@@ -1,4 +1,6 @@
-package com.dandykong.training.basics
+package com.dandykong.training.rewardstrategies
+
+import com.dandykong.training.basics.State
 
 interface RewardStrategy<S> where S : State {
 
