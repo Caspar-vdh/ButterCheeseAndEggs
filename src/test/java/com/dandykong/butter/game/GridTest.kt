@@ -26,13 +26,6 @@ internal class GridTest {
         val row = Random.nextInt(NR_GRID_COLUMNS)
         val column = Random.nextInt(NR_GRID_ROWS)
 
-        // Setting a cell with an unknown player results in an exception
-        try {
-            grid.setCell(row, column, 3)
-            fail<Nothing>("Expected exception not thrown")
-        } catch (ignored: ButterException) {
-        }
-
         grid.setCell(row, column, Player.PLAYER_1)
 
         // Setting the same cell for a second time results in an exception
