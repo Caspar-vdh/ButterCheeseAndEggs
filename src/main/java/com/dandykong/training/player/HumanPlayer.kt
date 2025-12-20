@@ -3,6 +3,8 @@ package com.dandykong.training.player
 import com.dandykong.training.basics.State
 
 class HumanPlayer<S : State>(override val id: Int) : Player<S> {
+    override val type: Player.Type = Player.Type.HUMAN_PLAYER
+
     override fun resetForNewGame() {
     }
 

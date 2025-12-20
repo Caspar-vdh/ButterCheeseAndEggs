@@ -5,6 +5,7 @@ package com.dandykong.training.basics
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
+@OptIn(ExperimentalUnsignedTypes::class)
 internal class StateStoreTest {
     @Test
     fun convertFromUnsignedToSignedAndBack() {
@@ -22,7 +23,7 @@ internal class StateStoreTest {
 
     @Test
     fun addStateToStore() {
-        val stateStore = StateStore<TestState>("/path/to/file", 3, TestStateFactory())
+        val stateStore = StateStore(null, 3, TestStateFactory())
 
         val testState = TestState(123, ubyteArrayOf())
         assertNull(stateStore.getStateForId(testState.id))

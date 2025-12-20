@@ -3,21 +3,17 @@ package com.dandykong.training.basics
 import com.dandykong.logger.LOG
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import kotlin.io.path.Path
-import kotlin.io.path.exists
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class StateStore<S>(
-    private val filePath: String,
+    inputStream: DataInputStream?,
     private val nrActionsForState: Int,
     private val factory: StateFactory<S>
 ) where S : State {
     private val store: MutableMap<Int, S>
 
     init {
-        store = getNewOrPersistedStore()
+        store = getNewOrPersistedStore(inputStream)
     }
 
     fun getStateForId(id: Int): S? {
@@ -32,9 +28,8 @@ class StateStore<S>(
         store[state.id] = state
     }
 
-    fun persistStore() {
-        val stream = DataOutputStream(FileOutputStream(filePath))
-        store.values.forEach{
+    fun persistStore(stream: DataOutputStream) {
+        store.values.forEach {
             stream.writeInt(it.id)
             for (i in 0 until nrActionsForState) {
                 stream.writeByte(it.weights[i].toInt())
@@ -44,20 +39,19 @@ class StateStore<S>(
         stream.close()
     }
 
-    private fun getNewOrPersistedStore(): MutableMap<Int, S> {
+    private fun getNewOrPersistedStore(inputStream: DataInputStream?): MutableMap<Int, S> {
         val tempStore = hashMapOf<Int, S>()
-        if (Path(filePath).exists()) {
-            val stream = DataInputStream(FileInputStream(filePath))
-            while (stream.available() > 0) {
-                val id = stream.readInt()
+        inputStream?.let {
+            while (it.available() > 0) {
+                val id = it.readInt()
                 val weights = UByteArray(nrActionsForState)
                 for (i in 0 until nrActionsForState) {
-                    weights[i] = stream.readByte().toUByte()
+                    weights[i] = it.readByte().toUByte()
                 }
                 val state = factory.createNew(id, weights)
                 tempStore[state.id] = state
             }
-            stream.close()
+            inputStream.close()
             LOG.info("Read store, ${tempStore.size} states")
         }
         return tempStore

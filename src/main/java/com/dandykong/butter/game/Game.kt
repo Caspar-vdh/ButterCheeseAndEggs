@@ -1,54 +1,85 @@
 package com.dandykong.butter.game
 
+import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.grid.Grid
-import com.dandykong.butter.game.grid.GridStateFactory
-import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.game.grid.NR_GRID_ROWS
 import com.dandykong.butter.ui.ConsoleDrawer
 import com.dandykong.butter.ui.GridDrawer
-import com.dandykong.logger.LOG
-import com.dandykong.training.actionselectionstrategies.SelectHighestStrategy
-import com.dandykong.training.basics.StateStore
-import com.dandykong.training.player.CPUPlayer
-import com.dandykong.training.player.HumanPlayer
 import com.dandykong.training.player.Player
-import kotlin.random.Random
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
-class Game(private val players: Array<Player<GridState>>) {
-    fun play() {
-        val stateStore = StateStore(
-            "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat",
-            NR_GRID_ROWS * NR_GRID_COLUMNS,
-            GridStateFactory()
-        )
-        var terminate = false
+class Game {
+
+    fun play2() {
+        val gameFacade = GameFacade()
         val drawer: GridDrawer = ConsoleDrawer()
-        val grid = Grid.createInitial()
-        while (!terminate) {
-            for (player in players) {
-                val id = grid.generateId(player.id)
-                val state =
-                    if (stateStore.hasStateForId(id)) {
-                        stateStore.getStateForId(id)!!
-                    } else {
-                        val s = GridState.createNewFromGrid(grid, id)
-                        stateStore.addState(s)
-                        s
+        val gameFinished = AtomicBoolean(false)
+
+        gameFacade.gameStateListener = GameStateListener { state ->
+            when(state) {
+                GameState.WAITING_FOR_PLAYER -> {
+                    var done = false
+                    while (! done) {
+                        var row = -1
+                        var column = -1
+                        try {
+                            row = getValue("row")
+                            column = getValue("column")
+                            gameFacade.processMove(row, column)
+                            done = true
+                        } catch (ex: ButterException) {
+                            println("Invalid cell: [row: $row, column: $column]")
+                        }
                     }
-                val nextAction = player.nextAction(state)
-                val (row, column) = actionIdToRowAndColumn(nextAction)
-                grid.setCell(row, column, player.id)
-                drawer.draw(grid)
-                val winningPlayer = grid.winningPlayer
-                if (winningPlayer != null) {
-                    println("Player $winningPlayer won")
-                    terminate = true
-                    break
                 }
-                if (grid.isFull()) {
-                    LOG.info("No winner")
-                    terminate = true
-                    break
+
+                else -> { /* Do nothing */ }
+            }
+        }
+
+        gameFacade.gameGridListener = object : GameGridListener {
+            override fun onGridUpdated(grid: Grid, row: Int, column: Int) {
+                drawer.draw(grid)
+            }
+        }
+
+        gameFacade.gameEventListener = object : GameEventListener {
+            override fun onGameStarted(firstPlayerType: Player.Type) {
+                val startedString = when(firstPlayerType) {
+                    Player.Type.HUMAN_PLAYER -> "You go first."
+                    Player.Type.CPU_PLAYER -> "The computer goes first."
+                }
+                println("The game has started. $startedString")
+            }
+
+            override fun onGameTerminated(winningPlayerType: Player.Type?) {
+                val winnerString = when(winningPlayerType) {
+                    null -> "Nobody"
+                    Player.Type.HUMAN_PLAYER -> "You"
+                    Player.Type.CPU_PLAYER -> "The computer"
+                }
+                println("The game has finished. $winnerString won!")
+                gameFinished.set(true)
+            }
+        }
+        gameFacade.startGame()
+        while (!gameFinished.get()) {
+            runBlocking { delay(100) }
+        }
+    }
+
+    companion object {
+        private fun getValue(valueType: String): Int {
+            while (true) {
+                println("Select $valueType [0..2]")
+
+                val scanner = Scanner(System.`in`)
+                val c = scanner.next().single()
+                val tempVal = c.digitToInt()
+                if (tempVal in 0..2) {
+                    return tempVal
                 }
             }
         }
@@ -56,11 +87,5 @@ class Game(private val players: Array<Player<GridState>>) {
 }
 
 fun main() {
-    val players =
-        arrayOf(HumanPlayer<GridState>(Player.PLAYER_2), CPUPlayer<GridState>(Player.PLAYER_1, SelectHighestStrategy()))
-    val random = Random(System.currentTimeMillis()).nextInt()
-    if (random.mod(2) == 0) {
-        players.reverse()
-    }
-    Game(players).play()
+    Game().play2()
 }

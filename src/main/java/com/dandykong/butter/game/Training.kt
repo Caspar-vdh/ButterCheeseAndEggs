@@ -17,9 +17,15 @@ import com.dandykong.training.basics.StateStore
 import com.dandykong.training.player.Player
 import com.dandykong.training.rewardstrategies.NegativeRewardStrategy1
 import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 const val NR_OF_GAMES = 100000
 const val NR_OF_GAMES_FOR_STORE = 200
+
+private const val FILE_PATH = "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat"
 
 class Training(
     private val players: Array<CPUPlayer<GridState>>,
@@ -28,17 +34,17 @@ class Training(
 ) {
     fun play() {
         val stateStore = StateStore(
-            "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat",
+            DataInputStream(FileInputStream(FILE_PATH)),
             NR_GRID_ROWS * NR_GRID_COLUMNS,
             GridStateFactory()
         )
 
         val drawer: GridDrawer? = null
-//        val drawer: GridDrawer? = ConsoleDrawer()
 
         for (i in 1..NR_OF_GAMES) {
             playGame(i, stateStore, drawer)
-            if (i.mod(NR_OF_GAMES_FOR_STORE) == 0) stateStore.persistStore()
+            val stream = DataOutputStream(FileOutputStream(FILE_PATH))
+            if (i.mod(NR_OF_GAMES_FOR_STORE) == 0) stateStore.persistStore(stream)
         }
     }
 
@@ -93,8 +99,6 @@ class Training(
 }
 
 fun main() {
-
-
 //    val strategy = SelectChanceByWeightStrategy()
     val strategy = MultipleSelectionStrategy(
         Pair(SelectChanceByWeightStrategy(), 12),
