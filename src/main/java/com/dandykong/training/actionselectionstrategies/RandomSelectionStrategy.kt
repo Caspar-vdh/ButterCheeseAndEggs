@@ -1,12 +1,13 @@
 package com.dandykong.training.actionselectionstrategies
 
-import com.dandykong.logger.LOG
+import com.dandykong.logger.ButterLogger
 import kotlin.random.Random
 
-class RandomSelectionStrategy: ActionSelectionStrategy {
+class RandomSelectionStrategy(log: ButterLogger?): ActionSelectionStrategy(log) {
+
     @ExperimentalUnsignedTypes
     override fun selectAction(weights: UByteArray): Int {
-        LOG.info("Using ${this.javaClass.simpleName}")
+        log?.info("Using ${this.javaClass.simpleName}")
         val validActions = mutableListOf<Int>()
         for (i in weights.indices) {
             if (weights[i] != 0u.toUByte()) {

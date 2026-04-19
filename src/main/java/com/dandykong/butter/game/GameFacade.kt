@@ -4,6 +4,7 @@ import com.dandykong.butter.game.grid.Grid
 import com.dandykong.butter.game.grid.GridStateFactory
 import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
 import com.dandykong.butter.game.grid.NR_GRID_ROWS
+import com.dandykong.logger.ButterLogger
 import com.dandykong.training.actionselectionstrategies.SelectHighestStrategy
 import com.dandykong.training.basics.StateStore
 import com.dandykong.training.player.CPUPlayer
@@ -17,12 +18,11 @@ import kotlin.random.Random
 
 private const val DEFAULT_RESOURCE_PATH = "/training.dat"
 
-class GameFacade(resourcePath: String) {
+class GameFacade(resourcePath: String, log: ButterLogger?) {
 
     var gameStateListener: GameStateListener? = null
     var gameGridListener: GameGridListener? = null
     var gameEventListener: GameEventListener? = null
-
 
     lateinit var grid: Grid
     private val players: List<Player<GridState>> = listOf(
@@ -38,11 +38,12 @@ class GameFacade(resourcePath: String) {
         stateStore = StateStore(
             stream,
             NR_GRID_ROWS * NR_GRID_COLUMNS,
-            GridStateFactory()
+            GridStateFactory(),
+            log
         )
     }
 
-    constructor(): this(DEFAULT_RESOURCE_PATH)
+    constructor(log: ButterLogger?): this(DEFAULT_RESOURCE_PATH, log)
 
     fun startGame() {
         grid = Grid.createInitial()

@@ -1,6 +1,6 @@
 package com.dandykong.training.actionselectionstrategies
 
-class SelectHighestStrategy: ActionSelectionStrategy {
+class SelectHighestStrategy: ActionSelectionStrategy(null) {
     @ExperimentalUnsignedTypes
     override fun selectAction(weights: UByteArray): Int {
         var highest: UByte = 0u

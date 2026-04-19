@@ -13,6 +13,6 @@ internal class SelectFirstNonZeroStrategyTest {
         val nonZeroIndex = Random.nextInt(weights.size)
         weights[nonZeroIndex] = 127.toUByte()
 
-        assertEquals(nonZeroIndex, SelectFirstNonZeroStrategy().selectAction(weights))
+        assertEquals(nonZeroIndex, SelectFirstNonZeroStrategy(null).selectAction(weights))
     }
 }

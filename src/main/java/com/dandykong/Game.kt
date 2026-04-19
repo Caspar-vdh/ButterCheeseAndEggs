@@ -1,19 +1,69 @@
-package com.dandykong.butter.game
+package com.dandykong
 
+import ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME
 import com.dandykong.butter.exception.ButterException
+import com.dandykong.butter.game.*
 import com.dandykong.butter.game.grid.Grid
 import com.dandykong.butter.ui.ConsoleDrawer
 import com.dandykong.butter.ui.GridDrawer
+import com.dandykong.logger.ButterLogger
+import com.dandykong.training.actionselectionstrategies.MultipleSelectionStrategy
+import com.dandykong.training.actionselectionstrategies.RandomSelectionStrategy
+import com.dandykong.training.actionselectionstrategies.SelectChanceByWeightStrategy
+import com.dandykong.training.actionselectionstrategies.SelectFirstNonZeroStrategy
+import com.dandykong.training.player.CPUPlayer
 import com.dandykong.training.player.Player
+import com.dandykong.training.rewardstrategies.NegativeRewardStrategy1
+import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Game {
 
-    fun play2() {
-        val gameFacade = GameFacade()
+    private val log = object : ButterLogger {
+        private val logger: Logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME)
+
+        override fun info(var1: String) {
+            logger.info(var1)
+        }
+
+        override fun info(var1: String, var2: Any) {
+            logger.info(var1, var2)
+        }
+
+        override fun info(var1: String, var2: Any, var3: Any) {
+            logger.info(var1, var2, var3)
+        }
+
+        override fun info(var1: String, vararg var2: Any) {
+            logger.info(var1, var2)
+        }
+    }
+
+    @Suppress("unused")
+    fun train() {
+//    val strategy = SelectChanceByWeightStrategy()
+        val strategy = MultipleSelectionStrategy(
+            Pair(SelectChanceByWeightStrategy(), 12),
+            Pair(RandomSelectionStrategy(log), 2),
+            Pair(SelectFirstNonZeroStrategy(log), 1)
+        )
+
+        val players: Array<CPUPlayer<GridState>> = arrayOf(
+            CPUPlayer(Player.PLAYER_1, strategy),
+            CPUPlayer(Player.PLAYER_2, strategy),
+        )
+
+        Training(players, PositiveRewardStrategy1(), NegativeRewardStrategy1(), log).play()
+    }
+
+
+    fun play() {
+        val gameFacade = GameFacade(log)
         val drawer: GridDrawer = ConsoleDrawer()
         val gameFinished = AtomicBoolean(false)
 
@@ -87,5 +137,5 @@ class Game {
 }
 
 fun main() {
-    Game().play2()
+    Game().play()
 }

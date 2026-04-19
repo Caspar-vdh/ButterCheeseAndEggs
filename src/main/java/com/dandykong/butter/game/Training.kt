@@ -2,21 +2,14 @@ package com.dandykong.butter.game
 
 import com.dandykong.butter.exception.ButterException
 import com.dandykong.butter.game.grid.Grid
-import com.dandykong.training.actionselectionstrategies.SelectChanceByWeightStrategy
 import com.dandykong.butter.game.grid.GridStateFactory
 import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
 import com.dandykong.butter.game.grid.NR_GRID_ROWS
 import com.dandykong.training.player.CPUPlayer
 import com.dandykong.butter.ui.GridDrawer
-import com.dandykong.logger.LOG
-import com.dandykong.training.actionselectionstrategies.MultipleSelectionStrategy
-import com.dandykong.training.actionselectionstrategies.RandomSelectionStrategy
-import com.dandykong.training.actionselectionstrategies.SelectFirstNonZeroStrategy
+import com.dandykong.logger.ButterLogger
 import com.dandykong.training.rewardstrategies.RewardStrategy
 import com.dandykong.training.basics.StateStore
-import com.dandykong.training.player.Player
-import com.dandykong.training.rewardstrategies.NegativeRewardStrategy1
-import com.dandykong.training.rewardstrategies.PositiveRewardStrategy1
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
@@ -32,6 +25,17 @@ class Training(
     private val positiveRewardStrategy: RewardStrategy<GridState>,
     private val negativeRewardStrategy: RewardStrategy<GridState>
 ) {
+
+    constructor(
+        players: Array<CPUPlayer<GridState>>,
+        positiveRewardStrategy: RewardStrategy<GridState>,
+        negativeRewardStrategy: RewardStrategy<GridState>,
+        log: ButterLogger) : this(players, positiveRewardStrategy, negativeRewardStrategy) {
+        this.log = log
+    }
+
+    var log: ButterLogger? = null
+
     fun play() {
         val stateStore = StateStore(
             DataInputStream(FileInputStream(FILE_PATH)),
@@ -76,7 +80,7 @@ class Training(
                     drawer?.draw(grid)
                     val winningPlayer = grid.winningPlayer
                     if (winningPlayer != null) {
-                        LOG.info("Game $gameIndex: $winningPlayer won, $nrExistingStates existing states, $nrNewStates new states")
+                        log?.info("Game $gameIndex: $winningPlayer won, $nrExistingStates existing states, $nrNewStates new states")
                         for (p in players) {
                             if (p.id == winningPlayer) positiveRewardStrategy.updateWeights(p.selectedActions)
                             else negativeRewardStrategy.updateWeights(p.selectedActions)
@@ -85,7 +89,7 @@ class Training(
                         break
                     }
                     if (grid.isFull()) {
-                        LOG.info("Game $gameIndex: no winner, $nrExistingStates existing states, $nrNewStates new states")
+                        log?.info("Game $gameIndex: no winner, $nrExistingStates existing states, $nrNewStates new states")
                         terminate = true
                         break
                     }
@@ -96,20 +100,4 @@ class Training(
             }
         }
     }
-}
-
-fun main() {
-//    val strategy = SelectChanceByWeightStrategy()
-    val strategy = MultipleSelectionStrategy(
-        Pair(SelectChanceByWeightStrategy(), 12),
-        Pair(RandomSelectionStrategy(), 2),
-        Pair(SelectFirstNonZeroStrategy(), 1)
-    )
-
-    val players: Array<CPUPlayer<GridState>> = arrayOf(
-        CPUPlayer(Player.PLAYER_1, strategy),
-        CPUPlayer(Player.PLAYER_2, strategy),
-    )
-
-    Training(players, PositiveRewardStrategy1(), NegativeRewardStrategy1()).play()
 }

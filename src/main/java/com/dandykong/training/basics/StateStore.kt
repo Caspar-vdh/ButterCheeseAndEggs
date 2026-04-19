@@ -1,6 +1,6 @@
 package com.dandykong.training.basics
 
-import com.dandykong.logger.LOG
+import com.dandykong.logger.ButterLogger
 import java.io.DataInputStream
 import java.io.DataOutputStream
 
@@ -11,6 +11,18 @@ class StateStore<S>(
     private val factory: StateFactory<S>
 ) where S : State {
     private val store: MutableMap<Int, S>
+
+    private var log: ButterLogger? = null
+
+    constructor(
+        inputStream: DataInputStream?,
+        nrActionsForState: Int,
+        factory: StateFactory<S>,
+        log: ButterLogger?
+    ) : this(inputStream, nrActionsForState, factory) {
+        this.log = log
+    }
+
 
     init {
         store = getNewOrPersistedStore(inputStream)
@@ -35,7 +47,7 @@ class StateStore<S>(
                 stream.writeByte(it.weights[i].toInt())
             }
         }
-        LOG.info("Persisted store, wrote ${store.size} states")
+        log?.info("Persisted store, wrote ${store.size} states")
         stream.close()
     }
 
@@ -52,7 +64,7 @@ class StateStore<S>(
                 tempStore[state.id] = state
             }
             inputStream.close()
-            LOG.info("Read store, ${tempStore.size} states")
+            log?.info("Read store, ${tempStore.size} states")
         }
         return tempStore
     }

@@ -3,13 +3,13 @@ package com.dandykong.training.actionselectionstrategies
 import kotlin.random.Random
 
 class MultipleSelectionStrategy(private vararg val strategies: Pair<ActionSelectionStrategy, Int>):
-    ActionSelectionStrategy {
+    ActionSelectionStrategy(null) {
 
     private val totalChance = strategies.sumOf { pair -> pair.second }
 
     @ExperimentalUnsignedTypes
     override fun selectAction(weights: UByteArray): Int {
-        val chance = Random.nextInt(totalChance);
+        val chance = Random.nextInt(totalChance)
         var sum = 0
 
         for (strategy in strategies){

@@ -1,6 +1,9 @@
 package com.dandykong.training.actionselectionstrategies
 
-interface ActionSelectionStrategy {
+import com.dandykong.logger.ButterLogger
+
+abstract class ActionSelectionStrategy(var log: ButterLogger?) {
+
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun selectAction(weights: UByteArray): Int
+    abstract fun selectAction(weights: UByteArray): Int
 }

@@ -4,7 +4,7 @@ import com.dandykong.butter.exception.ButterException
 import kotlin.random.Random
 
 @Suppress("OPT_IN_USAGE", "OPT_IN_OVERRIDE")
-class SelectChanceByWeightStrategy: ActionSelectionStrategy {
+class SelectChanceByWeightStrategy: ActionSelectionStrategy(null) {
     override fun selectAction(weights: UByteArray): Int {
         val weightIndices:MutableList<Pair<UByte, Int>> = mutableListOf()
         for (i in weights.indices) {
