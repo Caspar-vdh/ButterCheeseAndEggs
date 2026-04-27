@@ -1,11 +1,17 @@
 package com.dandykong
 
 import ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME
-import com.dandykong.butter.exception.ButterException
-import com.dandykong.butter.game.*
-import com.dandykong.butter.game.grid.Grid
-import com.dandykong.butter.ui.ConsoleDrawer
-import com.dandykong.butter.ui.GridDrawer
+import com.dandykong.butter.shared.exception.ButterException
+import com.dandykong.butter.shared.game.GameEventListener
+import com.dandykong.butter.tictactoe.game.GameFacade
+import com.dandykong.butter.shared.game.GameGridListener
+import com.dandykong.butter.shared.game.GameState
+import com.dandykong.butter.shared.game.GameStateListener
+import com.dandykong.butter.tictactoe.game.TicTacToeGridState
+import com.dandykong.butter.tictactoe.game.Training
+import com.dandykong.butter.shared.game.grid.Grid
+import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
+import com.dandykong.butter.shared.ui.GridDrawer
 import com.dandykong.logger.ButterLogger
 import com.dandykong.training.actionselectionstrategies.MultipleSelectionStrategy
 import com.dandykong.training.actionselectionstrategies.RandomSelectionStrategy
@@ -21,6 +27,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.time.Duration.Companion.milliseconds
 
 class Game {
 
@@ -53,7 +60,7 @@ class Game {
             Pair(SelectFirstNonZeroStrategy(log), 1)
         )
 
-        val players: Array<CPUPlayer<GridState>> = arrayOf(
+        val players: Array<CPUPlayer<TicTacToeGridState>> = arrayOf(
             CPUPlayer(Player.PLAYER_1, strategy),
             CPUPlayer(Player.PLAYER_2, strategy),
         )
@@ -64,14 +71,14 @@ class Game {
 
     fun play() {
         val gameFacade = GameFacade(log)
-        val drawer: GridDrawer = ConsoleDrawer()
+        val drawer: GridDrawer<Int> = ConsoleDrawer()
         val gameFinished = AtomicBoolean(false)
 
         gameFacade.gameStateListener = GameStateListener { state ->
-            when(state) {
+            when (state) {
                 GameState.WAITING_FOR_PLAYER -> {
                     var done = false
-                    while (! done) {
+                    while (!done) {
                         var row = -1
                         var column = -1
                         try {
@@ -79,18 +86,19 @@ class Game {
                             column = getValue("column")
                             gameFacade.processMove(row, column)
                             done = true
-                        } catch (ex: ButterException) {
+                        } catch (_: ButterException) {
                             println("Invalid cell: [row: $row, column: $column]")
                         }
                     }
                 }
 
-                else -> { /* Do nothing */ }
+                else -> { /* Do nothing */
+                }
             }
         }
 
-        gameFacade.gameGridListener = object : GameGridListener {
-            override fun onGridUpdated(grid: Grid, row: Int, column: Int) {
+        gameFacade.gameGridListener = object : GameGridListener<Int> {
+            override fun onGridUpdated(grid: Grid<Int>, row: Int, column: Int) {
                 drawer.draw(grid)
             }
         }
@@ -116,7 +124,7 @@ class Game {
         }
         gameFacade.startGame()
         while (!gameFinished.get()) {
-            runBlocking { delay(100) }
+            runBlocking { delay(100.milliseconds) }
         }
     }
 

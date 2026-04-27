@@ -1,19 +1,18 @@
-package com.dandykong.butter.game
+package com.dandykong.butter.tictactoe.game.grid
 
-import com.dandykong.butter.exception.ButterException
-import com.dandykong.butter.game.grid.Grid
-import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.game.grid.NR_GRID_ROWS
+import com.dandykong.butter.shared.exception.ButterException
+import com.dandykong.butter.shared.game.CellState
+import com.dandykong.butter.shared.game.rowAndColumToActionId
 import com.dandykong.training.player.Player
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-internal class GridTest {
+internal class TicTacToeGridTest {
 
     @Test
     fun isCellEmpty() {
-        val grid = Grid.createInitial()
+        val grid = TicTacToeGrid()
         val row = Random.nextInt(NR_GRID_COLUMNS)
         val column = Random.nextInt(NR_GRID_ROWS)
 
@@ -22,7 +21,7 @@ internal class GridTest {
 
     @Test
     fun setCell() {
-        val grid = Grid.createInitial()
+        val grid = TicTacToeGrid()
         val row = Random.nextInt(NR_GRID_COLUMNS)
         val column = Random.nextInt(NR_GRID_ROWS)
 
@@ -32,13 +31,13 @@ internal class GridTest {
         try {
             grid.setCell(row, column, Player.PLAYER_2)
             fail<Nothing>("Expected exception not thrown")
-        } catch (ignored: ButterException) {
+        } catch (_: ButterException) {
         }
     }
 
     @Test
     fun testGenerateId() {
-        val grid = Grid.createInitial()
+        val grid = TicTacToeGrid()
         val player1 = Player.PLAYER_1
         val player2 = Player.PLAYER_2
         val row1 = Random.nextInt(NR_GRID_ROWS)
@@ -55,12 +54,12 @@ internal class GridTest {
 
         val gridStateId = grid.generateId(player1)
 
-        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1) * 2)) and 0x03
+        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1, NR_GRID_COLUMNS) * 2)) and 0x03
         assertEquals(cellState1, CellState.MINE.state)
-        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2) * 2)) and 0x03
+        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2, NR_GRID_COLUMNS) * 2)) and 0x03
         assertEquals(cellState2, CellState.THEIRS.state)
 
-        val generatedGrid = Grid.createFromId(gridStateId, player1, player2)
+        val generatedGrid = TicTacToeGrid.createFromId(gridStateId, player1, player2)
         assertEquals(grid, generatedGrid)
     }
 }

@@ -1,4 +1,4 @@
-package com.dandykong.butter.exception
+package com.dandykong.butter.shared.exception
 
 @Suppress("unused")
 class ButterException : Exception {

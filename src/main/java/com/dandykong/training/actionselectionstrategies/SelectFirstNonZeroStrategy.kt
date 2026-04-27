@@ -1,6 +1,6 @@
 package com.dandykong.training.actionselectionstrategies
 
-import com.dandykong.butter.exception.ButterException
+import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.logger.ButterLogger
 
 @Suppress("OPT_IN_USAGE", "OPT_IN_OVERRIDE")

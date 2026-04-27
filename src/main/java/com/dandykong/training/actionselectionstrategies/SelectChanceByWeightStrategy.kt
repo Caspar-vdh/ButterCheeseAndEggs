@@ -1,6 +1,6 @@
 package com.dandykong.training.actionselectionstrategies
 
-import com.dandykong.butter.exception.ButterException
+import com.dandykong.butter.shared.exception.ButterException
 import kotlin.random.Random
 
 @Suppress("OPT_IN_USAGE", "OPT_IN_OVERRIDE")

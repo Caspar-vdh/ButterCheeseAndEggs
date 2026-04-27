@@ -1,15 +1,16 @@
-package com.dandykong.butter.game
+package com.dandykong.butter.tictactoe.game
 
-import com.dandykong.butter.exception.ButterException
-import com.dandykong.butter.game.grid.Grid
-import com.dandykong.butter.game.grid.GridStateFactory
-import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.game.grid.NR_GRID_ROWS
-import com.dandykong.training.player.CPUPlayer
-import com.dandykong.butter.ui.GridDrawer
+import com.dandykong.butter.shared.exception.ButterException
+import com.dandykong.butter.shared.game.actionIdToRowAndColumn
+import com.dandykong.butter.shared.game.grid.GridStateFactory
+import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
+import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
 import com.dandykong.logger.ButterLogger
-import com.dandykong.training.rewardstrategies.RewardStrategy
 import com.dandykong.training.basics.StateStore
+import com.dandykong.training.player.CPUPlayer
+import com.dandykong.training.rewardstrategies.RewardStrategy
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
@@ -21,16 +22,17 @@ const val NR_OF_GAMES_FOR_STORE = 200
 private const val FILE_PATH = "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat"
 
 class Training(
-    private val players: Array<CPUPlayer<GridState>>,
-    private val positiveRewardStrategy: RewardStrategy<GridState>,
-    private val negativeRewardStrategy: RewardStrategy<GridState>
+    private val players: Array<CPUPlayer<TicTacToeGridState>>,
+    private val positiveRewardStrategy: RewardStrategy<TicTacToeGridState>,
+    private val negativeRewardStrategy: RewardStrategy<TicTacToeGridState>
 ) {
 
     constructor(
-        players: Array<CPUPlayer<GridState>>,
-        positiveRewardStrategy: RewardStrategy<GridState>,
-        negativeRewardStrategy: RewardStrategy<GridState>,
-        log: ButterLogger) : this(players, positiveRewardStrategy, negativeRewardStrategy) {
+        players: Array<CPUPlayer<TicTacToeGridState>>,
+        positiveRewardStrategy: RewardStrategy<TicTacToeGridState>,
+        negativeRewardStrategy: RewardStrategy<TicTacToeGridState>,
+        log: ButterLogger
+    ) : this(players, positiveRewardStrategy, negativeRewardStrategy) {
         this.log = log
     }
 
@@ -43,7 +45,7 @@ class Training(
             GridStateFactory()
         )
 
-        val drawer: GridDrawer? = null
+        val drawer: ConsoleDrawer? = null
 
         for (i in 1..NR_OF_GAMES) {
             playGame(i, stateStore, drawer)
@@ -52,9 +54,9 @@ class Training(
         }
     }
 
-    private fun playGame(gameIndex: Int, stateStore: StateStore<GridState>, drawer: GridDrawer?) {
+    private fun playGame(gameIndex: Int, stateStore: StateStore<TicTacToeGridState>, drawer: ConsoleDrawer?) {
         for (player in players) player.resetForNewGame()
-        val grid = Grid.createInitial()
+        val grid = TicTacToeGrid()
         var terminate = false
 
         var nrExistingStates = 0
@@ -69,13 +71,13 @@ class Training(
                             nrExistingStates++
                             stateStore.getStateForId(id)!!
                         } else {
-                            val s = GridState.createNewFromGrid(grid, id)
+                            val s = TicTacToeGridState.createNewFromGrid(grid, id)
                             nrNewStates++
                             stateStore.addState(s)
                             s
                         }
                     val nextAction = player.nextAction(state)
-                    val (row, column) = actionIdToRowAndColumn(nextAction)
+                    val (row, column) = actionIdToRowAndColumn(nextAction, NR_GRID_COLUMNS)
                     grid.setCell(row, column, player.id)
                     drawer?.draw(grid)
                     val winningPlayer = grid.winningPlayer
@@ -95,7 +97,7 @@ class Training(
                     }
                     drawer?.waitForUser()
                 }
-            } catch (ex: ButterException) {
+            } catch (_: ButterException) {
                 terminate = true
             }
         }

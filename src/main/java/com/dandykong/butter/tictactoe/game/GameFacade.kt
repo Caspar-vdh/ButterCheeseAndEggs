@@ -1,9 +1,14 @@
-package com.dandykong.butter.game
+package com.dandykong.butter.tictactoe.game
 
-import com.dandykong.butter.game.grid.Grid
-import com.dandykong.butter.game.grid.GridStateFactory
-import com.dandykong.butter.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.game.grid.NR_GRID_ROWS
+import com.dandykong.butter.shared.game.GameEventListener
+import com.dandykong.butter.shared.game.GameGridListener
+import com.dandykong.butter.shared.game.GameState
+import com.dandykong.butter.shared.game.GameStateListener
+import com.dandykong.butter.shared.game.actionIdToRowAndColumn
+import com.dandykong.butter.shared.game.grid.GridStateFactory
+import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
 import com.dandykong.logger.ButterLogger
 import com.dandykong.training.actionselectionstrategies.SelectHighestStrategy
 import com.dandykong.training.basics.StateStore
@@ -21,16 +26,16 @@ private const val DEFAULT_RESOURCE_PATH = "/training.dat"
 class GameFacade(resourcePath: String, log: ButterLogger?) {
 
     var gameStateListener: GameStateListener? = null
-    var gameGridListener: GameGridListener? = null
+    var gameGridListener: GameGridListener<Int>? = null
     var gameEventListener: GameEventListener? = null
 
-    lateinit var grid: Grid
-    private val players: List<Player<GridState>> = listOf(
+    lateinit var grid: TicTacToeGrid
+    private val players: List<Player<TicTacToeGridState>> = listOf(
         HumanPlayer(Player.PLAYER_1),
         CPUPlayer(Player.PLAYER_2, SelectHighestStrategy())
     )
     private var currentPlayer = -1
-    private val stateStore: StateStore<GridState>
+    private val stateStore: StateStore<TicTacToeGridState>
 
     init {
         val stream = this::class.java.getResourceAsStream(resourcePath)?.let { DataInputStream(it) }
@@ -46,7 +51,7 @@ class GameFacade(resourcePath: String, log: ButterLogger?) {
     constructor(log: ButterLogger?): this(DEFAULT_RESOURCE_PATH, log)
 
     fun startGame() {
-        grid = Grid.createInitial()
+        grid = TicTacToeGrid()
 
         currentPlayer = Random.nextInt(2)
         when (val player = players[currentPlayer]) {
@@ -85,7 +90,7 @@ class GameFacade(resourcePath: String, log: ButterLogger?) {
         }
     }
 
-    private fun processCpuMove(player: CPUPlayer<GridState>) {
+    private fun processCpuMove(player: CPUPlayer<TicTacToeGridState>) {
         val scope = CoroutineScope(Dispatchers.Default)
         scope.launch {
             val id = grid.generateId(player.id)
@@ -93,12 +98,12 @@ class GameFacade(resourcePath: String, log: ButterLogger?) {
                 if (stateStore.hasStateForId(id)) {
                     stateStore.getStateForId(id)!!
                 } else {
-                    val s = GridState.createNewFromGrid(grid, id)
+                    val s = TicTacToeGridState.createNewFromGrid(grid, id)
                     stateStore.addState(s)
                     s
                 }
             val nextAction = player.nextAction(state)
-            val (row, column) = actionIdToRowAndColumn(nextAction)
+            val (row, column) = actionIdToRowAndColumn(nextAction, NR_GRID_COLUMNS)
             processMove(row, column)
         }
     }

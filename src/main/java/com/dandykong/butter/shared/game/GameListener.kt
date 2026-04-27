@@ -1,14 +1,14 @@
-package com.dandykong.butter.game
+package com.dandykong.butter.shared.game
 
-import com.dandykong.butter.game.grid.Grid
+import com.dandykong.butter.shared.game.grid.Grid
 import com.dandykong.training.player.Player
 
 fun interface GameStateListener {
     fun onStateChanged(state: GameState)
 }
 
-interface GameGridListener {
-    fun onGridUpdated(grid: Grid, row: Int, column: Int)
+interface GameGridListener<IdType> {
+    fun onGridUpdated(grid: Grid<IdType>, row: Int, column: Int)
 }
 
 interface GameEventListener {
