@@ -2,8 +2,8 @@ package com.dandykong.butter.tictactoe.game.grid
 
 import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.CellState
-import com.dandykong.butter.shared.game.rowAndColumToActionId
-import com.dandykong.training.player.Player
+import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
+import com.dandykong.butter.shared.player.Player
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
@@ -54,9 +54,9 @@ internal class TicTacToeGridTest {
 
         val gridStateId = grid.generateId(player1)
 
-        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1, NR_GRID_COLUMNS) * 2)) and 0x03
+        val cellState1 = (gridStateId shr (rowAndColumToActionId(row1, column1) * 2)) and 0x03
         assertEquals(cellState1, CellState.MINE.state)
-        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2, NR_GRID_COLUMNS) * 2)) and 0x03
+        val cellState2 = (gridStateId shr (rowAndColumToActionId(row2, column2) * 2)) and 0x03
         assertEquals(cellState2, CellState.THEIRS.state)
 
         val generatedGrid = TicTacToeGrid.createFromId(gridStateId, player1, player2)

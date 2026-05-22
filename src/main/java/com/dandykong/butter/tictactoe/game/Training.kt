@@ -1,16 +1,17 @@
 package com.dandykong.butter.tictactoe.game
 
 import com.dandykong.butter.shared.exception.ButterException
-import com.dandykong.butter.shared.game.actionIdToRowAndColumn
-import com.dandykong.butter.shared.game.grid.GridStateFactory
+import com.dandykong.butter.tictactoe.state.TicTacToeGridStateFactory
 import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
 import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
 import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
+import com.dandykong.butter.tictactoe.state.TicTacToeGridState
+import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
 import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
 import com.dandykong.logger.ButterLogger
-import com.dandykong.training.basics.StateStore
-import com.dandykong.training.player.CPUPlayer
-import com.dandykong.training.rewardstrategies.RewardStrategy
+import com.dandykong.butter.shared.player.CPUPlayer
+import com.dandykong.butter.shared.rewardstrategies.RewardStrategy
+import com.dandykong.butter.tictactoe.state.TicTacToeStateStore
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
@@ -22,15 +23,15 @@ const val NR_OF_GAMES_FOR_STORE = 200
 private const val FILE_PATH = "C:/Users/c_van/Projects/data/ButterCheeseAndEggs/training.dat"
 
 class Training(
-    private val players: Array<CPUPlayer<TicTacToeGridState>>,
-    private val positiveRewardStrategy: RewardStrategy<TicTacToeGridState>,
-    private val negativeRewardStrategy: RewardStrategy<TicTacToeGridState>
+    private val players: Array<CPUPlayer<Int, TicTacToeGridState>>,
+    private val positiveRewardStrategy: RewardStrategy<Int, TicTacToeGridState>,
+    private val negativeRewardStrategy: RewardStrategy<Int, TicTacToeGridState>
 ) {
 
     constructor(
-        players: Array<CPUPlayer<TicTacToeGridState>>,
-        positiveRewardStrategy: RewardStrategy<TicTacToeGridState>,
-        negativeRewardStrategy: RewardStrategy<TicTacToeGridState>,
+        players: Array<CPUPlayer<Int, TicTacToeGridState>>,
+        positiveRewardStrategy: RewardStrategy<Int, TicTacToeGridState>,
+        negativeRewardStrategy: RewardStrategy<Int, TicTacToeGridState>,
         log: ButterLogger
     ) : this(players, positiveRewardStrategy, negativeRewardStrategy) {
         this.log = log
@@ -39,10 +40,10 @@ class Training(
     var log: ButterLogger? = null
 
     fun play() {
-        val stateStore = StateStore(
+        val stateStore = TicTacToeStateStore(
             DataInputStream(FileInputStream(FILE_PATH)),
             NR_GRID_ROWS * NR_GRID_COLUMNS,
-            GridStateFactory()
+            TicTacToeGridStateFactory()
         )
 
         val drawer: ConsoleDrawer? = null
@@ -54,7 +55,7 @@ class Training(
         }
     }
 
-    private fun playGame(gameIndex: Int, stateStore: StateStore<TicTacToeGridState>, drawer: ConsoleDrawer?) {
+    private fun playGame(gameIndex: Int, stateStore: TicTacToeStateStore, drawer: ConsoleDrawer?) {
         for (player in players) player.resetForNewGame()
         val grid = TicTacToeGrid()
         var terminate = false
@@ -77,7 +78,7 @@ class Training(
                             s
                         }
                     val nextAction = player.nextAction(state)
-                    val (row, column) = actionIdToRowAndColumn(nextAction, NR_GRID_COLUMNS)
+                    val (row, column) = actionIdToRowAndColumn(nextAction)
                     grid.setCell(row, column, player.id)
                     drawer?.draw(grid)
                     val winningPlayer = grid.winningPlayer

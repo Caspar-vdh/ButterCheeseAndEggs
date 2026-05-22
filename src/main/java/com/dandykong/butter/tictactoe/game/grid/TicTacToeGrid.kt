@@ -1,9 +1,9 @@
 package com.dandykong.butter.tictactoe.game.grid
 
 import com.dandykong.butter.shared.game.CellState
-import com.dandykong.butter.shared.game.actionIdToRowAndColumn
 import com.dandykong.butter.shared.game.grid.Grid
-import com.dandykong.butter.shared.game.rowAndColumToActionId
+import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
+import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
 import kotlin.math.abs
 
 const val NR_GRID_ROWS = 3
@@ -38,7 +38,7 @@ class TicTacToeGrid: Grid<Int>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
         var id = 0
         for (row in 0 until nrRows) {
             for (column in 0 until nrColumns) {
-                val index = rowAndColumToActionId(row, column, NR_GRID_COLUMNS)
+                val index = rowAndColumToActionId(row, column)
                 if (!isCellEmpty(row, column)) {
                     val cellState =
                         if (getCell(row, column) == playerId) CellState.MINE
@@ -65,7 +65,7 @@ class TicTacToeGrid: Grid<Int>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
 
             for (index in 0 until NR_GRID_ROWS * NR_GRID_COLUMNS) {
                 val mask = 0x3 shl(index * 2)
-                val (row, column) = actionIdToRowAndColumn(index, NR_GRID_COLUMNS)
+                val (row, column) = actionIdToRowAndColumn(index)
                 val cellState = CellState.fromInt((id and mask) shr (index * 2))
                 when(cellState) {
                     CellState.EMPTY -> continue

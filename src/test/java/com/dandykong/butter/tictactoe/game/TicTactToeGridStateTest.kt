@@ -1,12 +1,13 @@
 package com.dandykong.butter.tictactoe.game
 
-import com.dandykong.butter.shared.game.actionIdToRowAndColumn
-import com.dandykong.butter.shared.game.rowAndColumToActionId
 import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
 import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
 import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
-import com.dandykong.training.basics.INITIAL_WEIGHT
-import com.dandykong.training.player.Player
+import com.dandykong.butter.tictactoe.state.TicTacToeGridState
+import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
+import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
+import com.dandykong.butter.shared.state.INITIAL_WEIGHT
+import com.dandykong.butter.shared.player.Player
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
@@ -15,28 +16,28 @@ internal class TicTactToeGridStateTest {
 
     @Test
     fun testRowAndColumToActionId() {
-        Assertions.assertEquals(0, rowAndColumToActionId(0, 0, NR_GRID_COLUMNS))
-        Assertions.assertEquals(1, rowAndColumToActionId(0, 1, NR_GRID_COLUMNS))
-        Assertions.assertEquals(2, rowAndColumToActionId(0, 2, NR_GRID_COLUMNS))
-        Assertions.assertEquals(3, rowAndColumToActionId(1, 0, NR_GRID_COLUMNS))
-        Assertions.assertEquals(4, rowAndColumToActionId(1, 1, NR_GRID_COLUMNS))
-        Assertions.assertEquals(5, rowAndColumToActionId(1, 2, NR_GRID_COLUMNS))
-        Assertions.assertEquals(6, rowAndColumToActionId(2, 0, NR_GRID_COLUMNS))
-        Assertions.assertEquals(7, rowAndColumToActionId(2, 1, NR_GRID_COLUMNS))
-        Assertions.assertEquals(8, rowAndColumToActionId(2, 2, NR_GRID_COLUMNS))
+        Assertions.assertEquals(0, rowAndColumToActionId(0, 0))
+        Assertions.assertEquals(1, rowAndColumToActionId(0, 1))
+        Assertions.assertEquals(2, rowAndColumToActionId(0, 2))
+        Assertions.assertEquals(3, rowAndColumToActionId(1, 0))
+        Assertions.assertEquals(4, rowAndColumToActionId(1, 1))
+        Assertions.assertEquals(5, rowAndColumToActionId(1, 2))
+        Assertions.assertEquals(6, rowAndColumToActionId(2, 0))
+        Assertions.assertEquals(7, rowAndColumToActionId(2, 1))
+        Assertions.assertEquals(8, rowAndColumToActionId(2, 2))
     }
 
     @Test
     fun testActionIdToRowAndColumn() {
-        Assertions.assertEquals(Pair(0, 0), actionIdToRowAndColumn(0, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(0, 1), actionIdToRowAndColumn(1, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(0, 2), actionIdToRowAndColumn(2, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(1, 0), actionIdToRowAndColumn(3, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(1, 1), actionIdToRowAndColumn(4, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(1, 2), actionIdToRowAndColumn(5, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(2, 0), actionIdToRowAndColumn(6, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(2, 1), actionIdToRowAndColumn(7, NR_GRID_COLUMNS))
-        Assertions.assertEquals(Pair(2, 2), actionIdToRowAndColumn(8, NR_GRID_COLUMNS))
+        Assertions.assertEquals(Pair(0, 0), actionIdToRowAndColumn(0))
+        Assertions.assertEquals(Pair(0, 1), actionIdToRowAndColumn(1))
+        Assertions.assertEquals(Pair(0, 2), actionIdToRowAndColumn(2))
+        Assertions.assertEquals(Pair(1, 0), actionIdToRowAndColumn(3))
+        Assertions.assertEquals(Pair(1, 1), actionIdToRowAndColumn(4))
+        Assertions.assertEquals(Pair(1, 2), actionIdToRowAndColumn(5))
+        Assertions.assertEquals(Pair(2, 0), actionIdToRowAndColumn(6))
+        Assertions.assertEquals(Pair(2, 1), actionIdToRowAndColumn(7))
+        Assertions.assertEquals(Pair(2, 2), actionIdToRowAndColumn(8))
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
@@ -60,8 +61,8 @@ internal class TicTactToeGridStateTest {
         val weights: UByteArray = ticTacToeGridState.weights
         for (i in 0 until 9) {
             when (i) {
-                rowAndColumToActionId(row1, column1, NR_GRID_COLUMNS) -> Assertions.assertEquals(0.toUByte(), weights[i])
-                rowAndColumToActionId(row2, column2, NR_GRID_COLUMNS) -> Assertions.assertEquals(0.toUByte(), weights[i])
+                rowAndColumToActionId(row1, column1) -> Assertions.assertEquals(0.toUByte(), weights[i])
+                rowAndColumToActionId(row2, column2) -> Assertions.assertEquals(0.toUByte(), weights[i])
                 else -> Assertions.assertEquals(INITIAL_WEIGHT, weights[i])
             }
         }
