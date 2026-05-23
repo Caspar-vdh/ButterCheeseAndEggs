@@ -8,7 +8,7 @@ import com.dandykong.butter.shared.game.GameGridListener
 import com.dandykong.butter.shared.game.GameState
 import com.dandykong.butter.shared.game.GameStateListener
 import com.dandykong.butter.tictactoe.state.TicTacToeGridState
-import com.dandykong.butter.tictactoe.game.Training
+import com.dandykong.butter.tictactoe.game.TicTacToeTraining
 import com.dandykong.butter.shared.game.grid.Grid
 import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
 import com.dandykong.butter.shared.ui.GridDrawer
@@ -65,10 +65,11 @@ class Game {
             CPUPlayer(Player.PLAYER_2, strategy),
         )
 
-        Training(
+        TicTacToeTraining.create(
             players,
-            PositiveRewardStrategy1<Int, TicTacToeGridState>(),
-            NegativeRewardStrategy1<Int, TicTacToeGridState>(),
+            PositiveRewardStrategy1(),
+            NegativeRewardStrategy1(),
+            null,
             log
         ).play()
     }
