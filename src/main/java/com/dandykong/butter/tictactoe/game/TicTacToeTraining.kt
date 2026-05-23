@@ -86,7 +86,8 @@ class TicTacToeTraining(
             val stateStore = TicTacToeStateStore(
                 DataInputStream(FileInputStream(FILE_PATH)),
                 NR_GRID_ROWS * NR_GRID_COLUMNS,
-                TicTacToeGridStateFactory()
+                TicTacToeGridStateFactory(),
+                log = log,
             )
             return TicTacToeTraining(
                 configuration = configuration,

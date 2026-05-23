@@ -23,7 +23,7 @@ internal class StateStoreTest {
 
     @Test
     fun addStateToStore() {
-        val stateStore = object : StateStore<TestState, Int>(null, 3, TestStateFactory()) {
+        val stateStore = object : StateStore<TestState, Int>(null, 3, TestStateFactory(), null) {
             override fun writeId(stream: DataOutputStream, id: Int) {
             }
 

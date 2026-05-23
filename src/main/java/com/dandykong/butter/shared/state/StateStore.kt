@@ -8,21 +8,10 @@ import java.io.DataOutputStream
 abstract class StateStore<StateType, StateIdType>(
     inputStream: DataInputStream?,
     private val nrActionsForState: Int,
-    private val factory: StateFactory<StateType, StateIdType>
+    private val factory: StateFactory<StateType, StateIdType>,
+    private val log: ButterLogger?
 ) where StateType : State<StateIdType> {
     private val store: MutableMap<StateIdType, StateType>
-
-    private var log: ButterLogger? = null
-
-    constructor(
-        inputStream: DataInputStream?,
-        nrActionsForState: Int,
-        factory: StateFactory<StateType, StateIdType>,
-        log: ButterLogger?
-    ) : this(inputStream, nrActionsForState, factory) {
-        this.log = log
-    }
-
 
     init {
         store = getNewOrPersistedStore(inputStream)
@@ -51,7 +40,6 @@ abstract class StateStore<StateType, StateIdType>(
             }
         }
         log?.info("Persisted store, wrote ${store.size} states")
-        stream.close()
     }
 
     private fun getNewOrPersistedStore(inputStream: DataInputStream?): MutableMap<StateIdType, StateType> {

@@ -1,6 +1,5 @@
 package com.dandykong.butter.tictactoe
 
-import ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME
 import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.GameEventListener
 import com.dandykong.butter.tictactoe.game.GameFacade
@@ -32,7 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class Game {
 
     private val log = object : ButterLogger {
-        private val logger: Logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME)
+        private val logger: Logger = LoggerFactory.getLogger(Companion::class.java.simpleName)
 
         override fun info(var1: String) {
             logger.info(var1)

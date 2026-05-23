@@ -9,7 +9,7 @@ class TicTacToeStateStore(
     inputStream: DataInputStream?,
     nrActionsForState: Int,
     factory: TicTacToeGridStateFactory,
-    log: ButterLogger? = null
+    log: ButterLogger?
 ): StateStore<TicTacToeGridState, Int>(inputStream, nrActionsForState, factory, log) {
     override fun writeId(stream: DataOutputStream, id: Int) {
         stream.writeInt(id)

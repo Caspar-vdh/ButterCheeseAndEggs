@@ -36,10 +36,13 @@ abstract class Training<IdType, S: State<IdType>>(
     var log: ButterLogger? = null
 
     fun play() {
-        val stream = DataOutputStream(FileOutputStream(configuration.filePath))
         for (i in 1..configuration.nrOfGames) {
             playGame(i)
-            if (i.mod(configuration.nrOfGamesForStore) == 0) stateStore.persistStore(stream)
+            if (i.mod(configuration.nrOfGamesForStore) == 0) {
+                val stream = DataOutputStream(FileOutputStream(configuration.filePath))
+                stateStore.persistStore(stream)
+                stream.close()
+            }
         }
     }
 
