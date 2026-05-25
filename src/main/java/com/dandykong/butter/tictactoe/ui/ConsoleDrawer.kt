@@ -3,8 +3,8 @@ package com.dandykong.butter.tictactoe.ui
 import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.grid.Grid
 import com.dandykong.butter.shared.ui.GridDrawer
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.grid.NR_GRID_ROWS
 import com.dandykong.butter.shared.player.Player
 
 class ConsoleDrawer() : GridDrawer<Int>() {

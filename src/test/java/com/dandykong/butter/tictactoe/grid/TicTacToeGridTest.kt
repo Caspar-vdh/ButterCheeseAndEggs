@@ -1,9 +1,9 @@
-package com.dandykong.butter.tictactoe.game.grid
+package com.dandykong.butter.tictactoe.grid
 
 import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.CellState
-import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
 import com.dandykong.butter.shared.player.Player
+import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.random.Random

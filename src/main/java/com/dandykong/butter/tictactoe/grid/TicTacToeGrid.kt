@@ -1,4 +1,4 @@
-package com.dandykong.butter.tictactoe.game.grid
+package com.dandykong.butter.tictactoe.grid
 
 import com.dandykong.butter.shared.game.CellState
 import com.dandykong.butter.shared.game.grid.Grid

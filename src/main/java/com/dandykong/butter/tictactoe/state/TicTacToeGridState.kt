@@ -1,7 +1,7 @@
 package com.dandykong.butter.tictactoe.state
 
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
+import com.dandykong.butter.tictactoe.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.grid.TicTacToeGrid
 import com.dandykong.butter.shared.state.INITIAL_WEIGHT
 import com.dandykong.butter.shared.state.State
 

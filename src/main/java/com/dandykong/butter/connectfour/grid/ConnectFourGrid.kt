@@ -1,6 +1,7 @@
 package com.dandykong.butter.connectfour.grid
 
 import com.dandykong.butter.connectfour.state.StateId
+import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.CellState
 import com.dandykong.butter.shared.game.grid.Grid
 
@@ -60,12 +61,20 @@ class ConnectFourGrid: Grid<StateId>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
     }
 
     fun isColumnFull(colIdx: Int): Boolean {
-        for (row in 0 until nrRows) {
+        return !isCellEmpty(0, colIdx)
+    }
+
+    @Suppress("unused")
+    fun addToColumn(colIdx: Int, playerId: Int) {
+        if (isColumnFull(colIdx)) {
+            throw ButterException("Column is full: $colIdx")
+        }
+        for (row in nrRows - 1 downTo 0) {
             if (isCellEmpty(row, colIdx)) {
-                return false
+                setCell(row, colIdx, playerId)
+                return
             }
         }
-        return true
     }
 
     companion object {

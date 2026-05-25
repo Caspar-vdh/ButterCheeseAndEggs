@@ -1,19 +1,19 @@
-package com.dandykong.butter.tictactoe.game
+package com.dandykong.butter.tictactoe
 
 import com.dandykong.butter.shared.game.grid.Grid
 import com.dandykong.butter.shared.game.training.Training
 import com.dandykong.butter.shared.game.training.TrainingConfiguration
-import com.dandykong.butter.tictactoe.state.TicTacToeGridStateFactory
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
-import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
-import com.dandykong.butter.tictactoe.state.TicTacToeGridState
-import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
+import com.dandykong.butter.tictactoe.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.grid.TicTacToeGrid
 import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
 import com.dandykong.logger.ButterLogger
 import com.dandykong.butter.shared.player.CPUPlayer
 import com.dandykong.butter.shared.rewardstrategies.RewardStrategy
+import com.dandykong.butter.tictactoe.state.TicTacToeGridState
+import com.dandykong.butter.tictactoe.state.TicTacToeGridStateFactory
 import com.dandykong.butter.tictactoe.state.TicTacToeStateStore
+import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
 import java.io.DataInputStream
 import java.io.FileInputStream
 

@@ -1,13 +1,13 @@
 package com.dandykong.butter.tictactoe.game
 
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
-import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
+import com.dandykong.butter.tictactoe.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.grid.TicTacToeGrid
+import com.dandykong.butter.shared.state.INITIAL_WEIGHT
+import com.dandykong.butter.shared.player.Player
 import com.dandykong.butter.tictactoe.state.TicTacToeGridState
 import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
 import com.dandykong.butter.tictactoe.state.rowAndColumToActionId
-import com.dandykong.butter.shared.state.INITIAL_WEIGHT
-import com.dandykong.butter.shared.player.Player
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.random.Random

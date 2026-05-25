@@ -1,21 +1,19 @@
-package com.dandykong.butter.tictactoe.game
+package com.dandykong.butter.tictactoe
 
 import com.dandykong.butter.shared.game.GameEventListener
 import com.dandykong.butter.shared.game.GameGridListener
 import com.dandykong.butter.shared.game.GameState
 import com.dandykong.butter.shared.game.GameStateListener
-import com.dandykong.butter.tictactoe.state.TicTacToeGridStateFactory
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_COLUMNS
-import com.dandykong.butter.tictactoe.game.grid.NR_GRID_ROWS
-import com.dandykong.butter.tictactoe.game.grid.TicTacToeGrid
+import com.dandykong.butter.tictactoe.grid.NR_GRID_COLUMNS
+import com.dandykong.butter.tictactoe.grid.NR_GRID_ROWS
+import com.dandykong.butter.tictactoe.grid.TicTacToeGrid
 import com.dandykong.logger.ButterLogger
 import com.dandykong.butter.shared.actionselectionstrategies.SelectHighestStrategy
-import com.dandykong.butter.tictactoe.state.TicTacToeGridState
-import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
 import com.dandykong.butter.shared.player.CPUPlayer
 import com.dandykong.butter.shared.player.HumanPlayer
 import com.dandykong.butter.shared.player.Player
-import com.dandykong.butter.tictactoe.state.TicTacToeStateStore
+import com.dandykong.butter.tictactoe.state.TicTacToeGridState
+import com.dandykong.butter.tictactoe.state.actionIdToRowAndColumn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,15 +34,15 @@ class GameFacade(resourcePath: String, log: ButterLogger?) {
         CPUPlayer(Player.PLAYER_2, SelectHighestStrategy())
     )
     private var currentPlayer = -1
-    private val stateStore: TicTacToeStateStore
+    private val stateStore: com.dandykong.butter.tictactoe.state.TicTacToeStateStore
 
     init {
         val stream = this::class.java.getResourceAsStream(resourcePath)?.let { DataInputStream(it) }
         // TODO: Error handling?
-        stateStore = TicTacToeStateStore(
+        stateStore = _root_ide_package_.com.dandykong.butter.tictactoe.state.TicTacToeStateStore(
             stream,
             NR_GRID_ROWS * NR_GRID_COLUMNS,
-            TicTacToeGridStateFactory(),
+            _root_ide_package_.com.dandykong.butter.tictactoe.state.TicTacToeGridStateFactory(),
             log
         )
     }
@@ -104,7 +102,9 @@ class GameFacade(resourcePath: String, log: ButterLogger?) {
                     s
                 }
             val nextAction = player.nextAction(state)
-            val (row, column) = actionIdToRowAndColumn(nextAction)
+            val (row, column) = actionIdToRowAndColumn(
+                nextAction
+            )
             processMove(row, column)
         }
     }

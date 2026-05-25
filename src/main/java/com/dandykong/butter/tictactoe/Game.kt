@@ -2,12 +2,9 @@ package com.dandykong.butter.tictactoe
 
 import com.dandykong.butter.shared.exception.ButterException
 import com.dandykong.butter.shared.game.GameEventListener
-import com.dandykong.butter.tictactoe.game.GameFacade
 import com.dandykong.butter.shared.game.GameGridListener
 import com.dandykong.butter.shared.game.GameState
 import com.dandykong.butter.shared.game.GameStateListener
-import com.dandykong.butter.tictactoe.state.TicTacToeGridState
-import com.dandykong.butter.tictactoe.game.TicTacToeTraining
 import com.dandykong.butter.shared.game.grid.Grid
 import com.dandykong.butter.tictactoe.ui.ConsoleDrawer
 import com.dandykong.butter.shared.ui.GridDrawer
@@ -20,6 +17,7 @@ import com.dandykong.butter.shared.player.CPUPlayer
 import com.dandykong.butter.shared.player.Player
 import com.dandykong.butter.shared.rewardstrategies.NegativeRewardStrategy1
 import com.dandykong.butter.shared.rewardstrategies.PositiveRewardStrategy1
+import com.dandykong.butter.tictactoe.state.TicTacToeGridState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
