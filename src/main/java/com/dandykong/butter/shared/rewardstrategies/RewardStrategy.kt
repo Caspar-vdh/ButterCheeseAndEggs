@@ -2,6 +2,8 @@ package com.dandykong.butter.shared.rewardstrategies
 
 import com.dandykong.butter.shared.state.State
 
+const val DEFAULT_NR_REWARDED_ACTIONS = 5
+
 interface RewardStrategy<IdType, S: State<IdType>>  {
 
     /**

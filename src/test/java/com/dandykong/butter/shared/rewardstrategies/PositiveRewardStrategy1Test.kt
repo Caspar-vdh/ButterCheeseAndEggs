@@ -51,4 +51,30 @@ internal class PositiveRewardStrategy1Test {
         assertEquals(MAX_WEIGHT, testState2.weights[3])
         assertEquals(MAX_WEIGHT, testState6.weights[7])
     }
+
+    @Test
+    fun shouldNotUpdateWeightsBeforeTheRewardedActions() {
+        val states = (1..7).map { TestState(it, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT }) }
+        val selectedWeights = states.associateWith { 0 }
+
+        PositiveRewardStrategy1<Int, TestState>().updateWeights(selectedWeights)
+
+        assertEquals(INITIAL_WEIGHT, states[0].weights[0])
+        assertEquals(INITIAL_WEIGHT, states[1].weights[0])
+        assertEquals((INITIAL_WEIGHT + 1u).toUByte(), states[2].weights[0])
+        assertEquals((INITIAL_WEIGHT + 5u).toUByte(), states[6].weights[0])
+    }
+
+    @Test
+    fun shouldRewardConfiguredNumberOfActions() {
+        val states = (1..4).map { TestState(it, UByteArray(NR_TEST_ACTIONS) { INITIAL_WEIGHT }) }
+        val selectedWeights = states.associateWith { 0 }
+
+        PositiveRewardStrategy1<Int, TestState>(nrRewardedActions = 3).updateWeights(selectedWeights)
+
+        assertEquals(INITIAL_WEIGHT, states[0].weights[0])
+        assertEquals((INITIAL_WEIGHT + 1u).toUByte(), states[1].weights[0])
+        assertEquals((INITIAL_WEIGHT + 2u).toUByte(), states[2].weights[0])
+        assertEquals((INITIAL_WEIGHT + 3u).toUByte(), states[3].weights[0])
+    }
 }
