@@ -4,7 +4,8 @@ import com.dandykong.butter.shared.actionselectionstrategies.ActionSelectionStra
 import com.dandykong.butter.shared.state.State
 
 class CPUPlayer<IdType, S : State<IdType>>(override val id: Int, private val strategy: ActionSelectionStrategy): Player<IdType, S> {
-    val selectedActions: MutableMap<S, Int> = hashMapOf()
+    // Insertion-ordered: reward strategies rely on the last entry being the last move
+    val selectedActions: MutableMap<S, Int> = linkedMapOf()
     override val type: Player.Type = Player.Type.CPU_PLAYER
 
     override fun resetForNewGame() {
