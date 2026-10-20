@@ -41,7 +41,7 @@ class ConnectFourGrid: Grid<StateId>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
     }
 
     override fun generateId(playerId: Int): StateId {
-        val bytes = ByteArray(11)
+        val bytes = ByteArray(StateId.NR_BYTES)
         for (row in 0 until nrRows) {
             for (col in 0 until nrColumns) {
                 val i = row * nrColumns + col
