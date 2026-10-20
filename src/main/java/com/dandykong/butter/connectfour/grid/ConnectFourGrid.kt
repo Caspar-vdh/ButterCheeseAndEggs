@@ -40,7 +40,24 @@ class ConnectFourGrid: Grid<StateId>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
         return count
     }
 
+    /**
+     * A position and its left-right mirror image share one id: the smaller of the two orientations.
+     */
     override fun generateId(playerId: Int): StateId {
+        return minOf(generateId(playerId, mirrored = false), generateId(playerId, mirrored = true))
+    }
+
+    override fun toGridAction(stateAction: Int, playerId: Int): Int {
+        return if (isMirroredInState(playerId)) mirrorColumn(stateAction) else stateAction
+    }
+
+    private fun isMirroredInState(playerId: Int): Boolean {
+        return generateId(playerId, mirrored = true) < generateId(playerId, mirrored = false)
+    }
+
+    private fun mirrorColumn(colIdx: Int): Int = nrColumns - 1 - colIdx
+
+    private fun generateId(playerId: Int, mirrored: Boolean): StateId {
         val bytes = ByteArray(StateId.NR_BYTES)
         for (row in 0 until nrRows) {
             for (col in 0 until nrColumns) {
@@ -48,9 +65,10 @@ class ConnectFourGrid: Grid<StateId>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
                 val bitPos = i * 2
                 val byteIdx = bitPos / 8
                 val bitOff = bitPos % 8
+                val gridCol = if (mirrored) mirrorColumn(col) else col
 
-                if (!isCellEmpty(row, col)) {
-                    val cellState = if (cells[row][col] == playerId) CellState.MINE
+                if (!isCellEmpty(row, gridCol)) {
+                    val cellState = if (cells[row][gridCol] == playerId) CellState.MINE
                     else CellState.THEIRS
                     val value = cellState.state
                     bytes[byteIdx] = (bytes[byteIdx].toInt() or (value shl bitOff)).toByte()
@@ -82,22 +100,27 @@ class ConnectFourGrid: Grid<StateId>(NR_GRID_ROWS, NR_GRID_COLUMNS) {
         fun createFromId(id: StateId, playerId: Int, opponentPlayerId: Int): ConnectFourGrid {
             val grid = ConnectFourGrid()
 
-            for (i in 0 until NR_GRID_ROWS * NR_GRID_COLUMNS) {
-                val bitPos = i * 2
-                val byteIdx = bitPos / 8
-                val bitOff = bitPos % 8
-
-                val row = i / NR_GRID_COLUMNS
-                val col = i % NR_GRID_COLUMNS
-
-                val cellState = CellState.fromInt((id.bytes[byteIdx].toInt() ushr bitOff) and 0x3)
-                when (cellState) {
-                    CellState.EMPTY -> continue
-                    CellState.MINE -> grid.setCell(row, col, playerId)
-                    CellState.THEIRS -> grid.setCell(row, col, opponentPlayerId)
+            for (row in 0 until NR_GRID_ROWS) {
+                for (col in 0 until NR_GRID_COLUMNS) {
+                    when (cellStateFromId(id, row, col)) {
+                        CellState.EMPTY -> continue
+                        CellState.MINE -> grid.setCell(row, col, playerId)
+                        CellState.THEIRS -> grid.setCell(row, col, opponentPlayerId)
+                    }
                 }
             }
             return grid
+        }
+
+        fun isColumnFull(id: StateId, colIdx: Int): Boolean {
+            return cellStateFromId(id, 0, colIdx) != CellState.EMPTY
+        }
+
+        private fun cellStateFromId(id: StateId, row: Int, col: Int): CellState {
+            val bitPos = (row * NR_GRID_COLUMNS + col) * 2
+            val byteIdx = bitPos / 8
+            val bitOff = bitPos % 8
+            return CellState.fromInt((id.bytes[byteIdx].toInt() ushr bitOff) and 0x3)
         }
     }
 }

@@ -75,7 +75,7 @@ abstract class Training<IdType, S: State<IdType>>(
                             s
                         }
                     val nextAction = player.nextAction(state)
-                    updateGridWithAction(grid, nextAction, player.id)
+                    updateGridWithAction(grid, grid.toGridAction(nextAction, player.id), player.id)
                     drawer?.draw(grid)
                     val winningPlayer = grid.winningPlayer
                     if (winningPlayer != null) {

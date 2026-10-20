@@ -15,11 +15,11 @@ internal class ConnectFourStateStoreTest {
     @Test
     fun persistedStoreShouldReloadWithSameStatesAndWeights() {
         val grid = ConnectFourGrid()
-        val emptyGridState = ConnectFourGridState.createNewFromGrid(grid, grid.generateId(Player.PLAYER_1))
+        val emptyGridState = ConnectFourGridState.createNewFromId(grid.generateId(Player.PLAYER_1))
         grid.addToColumn(3, Player.PLAYER_1)
         grid.addToColumn(3, Player.PLAYER_2)
         grid.addToColumn(6, Player.PLAYER_1)
-        val laterState = ConnectFourGridState.createNewFromGrid(grid, grid.generateId(Player.PLAYER_2))
+        val laterState = ConnectFourGridState.createNewFromId(grid.generateId(Player.PLAYER_2))
         laterState.weights[2] = 200u
         laterState.weights[6] = 1u
 

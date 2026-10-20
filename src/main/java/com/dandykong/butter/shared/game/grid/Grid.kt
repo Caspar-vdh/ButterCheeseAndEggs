@@ -35,6 +35,12 @@ abstract class Grid<IdType>(val nrRows: Int, val nrColumns: Int) {
 
     abstract fun generateId(playerId: Int): IdType
 
+    /**
+     * Translates an action chosen in the orientation of the state for [playerId] (see [generateId]) to the
+     * action on this grid. Grids that map several orientations onto one state id override this.
+     */
+    open fun toGridAction(stateAction: Int, playerId: Int): Int = stateAction
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
